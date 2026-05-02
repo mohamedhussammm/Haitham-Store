@@ -26,9 +26,9 @@ const seedData = async () => {
     // ========================
     console.log('👤 Creating admin user...');
     const admin = await User.create({
-      firstName: 'Admin',
-      lastName: 'Bamteek',
-      email: 'admin@bamteek.com',
+      firstName: 'Haitham',
+      lastName: 'Admin',
+      email: 'admin@haithamstore.com',
       password: 'admin123',
       role: 'admin',
       phone: '+962791234567',
@@ -324,7 +324,7 @@ const seedData = async () => {
 
     console.log('\n✅ Seed completed successfully!');
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    console.log('📧 Admin: admin@bamteek.com / admin123');
+    console.log('📧 Admin: admin@haithamstore.com / admin123');
     console.log('📧 User:  john@test.com / user123');
     console.log(`📦 Products: ${products.length}`);
     console.log('🎟️  Coupons: WELCOME10, SAVE5, BUNDLE20');

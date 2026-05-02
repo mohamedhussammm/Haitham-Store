@@ -43,6 +43,9 @@ exports.updateUser = async (req, res, next) => {
 // DELETE /api/users/:id (Admin)
 exports.deleteUser = async (req, res, next) => {
   try {
+    if (req.params.id === req.user._id.toString()) {
+      throw ApiError.badRequest('You cannot delete your own account');
+    }
     const user = await User.findByIdAndDelete(req.params.id);
     if (!user) throw ApiError.notFound('User not found');
     res.json(new ApiResponse(200, null, 'User deleted'));

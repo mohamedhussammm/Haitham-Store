@@ -79,7 +79,7 @@ const orderSchema = new mongoose.Schema({
 orderSchema.pre('save', async function (next) {
   if (!this.orderNumber) {
     const count = await mongoose.model('Order').countDocuments();
-    this.orderNumber = `BT-${String(count + 1001).padStart(6, '0')}`;
+    this.orderNumber = `HS-${String(count + 1001).padStart(6, '0')}`;
   }
   next();
 });
