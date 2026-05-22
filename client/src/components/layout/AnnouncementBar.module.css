@@ -1,0 +1,38 @@
+.bar {
+  background: var(--color-bg-dark);
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  font-size: 12px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  position: relative;
+  z-index: calc(var(--z-header) + 1);
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.content strong {
+  font-weight: 700;
+}
+
+.close {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: white;
+  font-size: 14px;
+  opacity: 0.7;
+  transition: opacity var(--transition-fast);
+  padding: 4px;
+}
+
+.close:hover {
+  opacity: 1;
+}
