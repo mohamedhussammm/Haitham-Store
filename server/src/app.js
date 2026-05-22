@@ -12,6 +12,22 @@ const routes = require('./routes');
 
 const app = express();
 
+// Lazy DB connection for Vercel serverless
+const connectDB = require('./config/db');
+let dbConnected = false;
+app.use(async (req, res, next) => {
+  if (!dbConnected) {
+    try {
+      await connectDB();
+      dbConnected = true;
+    } catch (err) {
+      console.error('❌ MongoDB connection failed:', err.message);
+      return res.status(500).json({ success: false, message: 'Database connection failed' });
+    }
+  }
+  next();
+});
+
 // Security
 app.use(helmet());
 app.use(cors({
