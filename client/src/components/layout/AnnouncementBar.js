@@ -33,12 +33,12 @@ export default function AnnouncementBar() {
         .announcement-inner {
           display: flex;
           align-items: center;
-          gap: 12px;
-          font-size: 12px;
+          gap: 10px;
+          font-size: 11px;
           color: rgba(255,255,255,0.85);
           white-space: nowrap;
           overflow-x: auto;
-          padding: 0 16px;
+          padding: 0 12px;
           scrollbar-width: none;
         }
         .announcement-inner::-webkit-scrollbar { display: none; }

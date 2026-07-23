@@ -48,19 +48,19 @@
 
 .logoMain {
   font-family: var(--font-heading);
-  font-size: 20px;
+  font-size: 17px;
   font-weight: 700;
   color: var(--fs-white);
-  letter-spacing: 2px;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
 }
 
 .logoSub {
   font-family: var(--font-body);
-  font-size: 9px;
+  font-size: 8px;
   font-weight: 500;
   color: var(--fs-green-200);
-  letter-spacing: 4px;
+  letter-spacing: 3px;
   text-transform: uppercase;
   margin-top: 1px;
 }

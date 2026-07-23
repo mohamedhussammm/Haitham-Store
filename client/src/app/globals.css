@@ -73,9 +73,9 @@
 
   /* Layout */
   --container-max:      1200px;
-  --container-padding:  24px;
-  --header-height:      68px;
-  --announcement-height: 42px;
+  --container-padding:  20px;
+  --header-height:      54px;
+  --announcement-height: 30px;
   --drawer-width:       480px;
 
   /* Motion */
