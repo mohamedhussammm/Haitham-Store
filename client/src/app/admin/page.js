@@ -47,14 +47,14 @@ export default function AdminDashboard() {
 
       {/* Stat Cards */}
       <div className={styles.statsGrid}>
-        <StatCard label="Total Revenue" value={`JOD ${(stats?.totalRevenue || 0).toFixed(3)}`} icon="💰" color="#22c55e" />
-        <StatCard label="Total Orders" value={stats?.totalOrders || 0} icon="🛒" color="#3b82f6" />
-        <StatCard label="Pending Orders" value={stats?.pendingOrders || 0} icon="⏳" color="#f59e0b" />
-        <StatCard label="Delivered Orders" value={stats?.deliveredOrders || 0} icon="✅" color="#10b981" />
-        <StatCard label="Total Expenses" value={`JOD ${(expenseStats?.totalExpenses || 0).toFixed(3)}`} icon="📤" color="#ef4444" />
-        <StatCard label="Net Profit" value={`JOD ${profit.toFixed(3)}`} icon="📈" color={profit >= 0 ? '#22c55e' : '#ef4444'} />
-        <StatCard label="Avg Order Value" value={`JOD ${(stats?.averageOrder || 0).toFixed(3)}`} icon="🎯" color="#8b5cf6" />
-        <StatCard label="Cancelled Orders" value={stats?.cancelledOrders || 0} icon="❌" color="#94a3b8" />
+        <StatCard label="Total Revenue (EGP)" value={`${(stats?.totalRevenue || 0).toFixed(0)} EGP`} icon="💰" color="var(--fs-green-400)" />
+        <StatCard label="Total Meals Ordered"  value={stats?.totalOrders || 0} icon="🥗" color="#3b82f6" />
+        <StatCard label="Pending Orders"       value={stats?.pendingOrders || 0} icon="⏳" color="#f59e0b" />
+        <StatCard label="Delivered Orders"     value={stats?.deliveredOrders || 0} icon="✅" color="#10b981" />
+        <StatCard label="Total Expenses (EGP)" value={`${(expenseStats?.totalExpenses || 0).toFixed(0)} EGP`} icon="📤" color="#ef4444" />
+        <StatCard label="Net Profit (EGP)"     value={`${profit.toFixed(0)} EGP`} icon="📈" color={profit >= 0 ? '#22c55e' : '#ef4444'} />
+        <StatCard label="Avg Order (EGP)"      value={`${(stats?.averageOrder || 0).toFixed(0)} EGP`} icon="🎯" color="#8b5cf6" />
+        <StatCard label="Cancelled Orders"     value={stats?.cancelledOrders || 0} icon="❌" color="#94a3b8" />
       </div>
 
       <div className={styles.twoCol}>
@@ -97,7 +97,7 @@ export default function AdminDashboard() {
                   style={{ width: `${Math.min((cat.total / (expenseStats?.totalExpenses || 1)) * 100, 100)}%` }}
                 />
               </div>
-              <span className={styles.expenseAmt}>JOD {cat.total.toFixed(0)}</span>
+              <span className={styles.expenseAmt}>{cat.total.toFixed(0)} EGP</span>
             </div>
           ))}
         </div>
@@ -114,7 +114,7 @@ export default function AdminDashboard() {
                 style={{ height: `${Math.min((m.revenue / (stats?.totalRevenue || 1)) * 200, 120)}px` }}
               />
               <span className={styles.monthLabel}>{m._id.slice(5)}</span>
-              <span className={styles.monthRevenue}>JOD {m.revenue.toFixed(0)}</span>
+              <span className={styles.monthRevenue}>{m.revenue.toFixed(0)} EGP</span>
             </div>
           ))}
         </div>

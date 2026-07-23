@@ -6,9 +6,9 @@ import CartDrawer from '@/components/cart/CartDrawer';
 import AuthProvider from '@/components/layout/AuthProvider';
 
 export const metadata = {
-  title: 'Haitham Store - Premium Disposable Face Towels',
-  description: 'Simple switch, better skin. Premium biodegradable face towels for your daily skincare routine. Free shipping on orders above 30 JOD.',
-  keywords: 'face towels, disposable towels, skincare, bamboo towels, biodegradable, haitham store',
+  title: 'Fit Station Kitchen — Eat Fit. Live Strong.',
+  description: 'Fresh, healthy, calorie-counted meals delivered to your door. High-protein meal boxes, fresh salads, and weekly meal plans. Real Food. Real Results.',
+  keywords: 'healthy food, meal prep, high protein, calorie counted, fresh meals, fit station, meal delivery, keto, diet food, fitness meals, Egypt',
 };
 
 export default function RootLayout({ children }) {

@@ -8,7 +8,7 @@ const ApiResponse = require('../utils/ApiResponse');
 // POST /api/orders (Checkout)
 exports.checkout = async (req, res, next) => {
   try {
-    const { contact, shippingAddress, billingAddress, paymentMethod, currency = 'JOD', couponCode, saveInfo, notes } = req.body;
+    const { contact, shippingAddress, billingAddress, paymentMethod, currency = 'EGP', deliverySlot, couponCode, saveInfo, notes } = req.body;
     const sessionId = req.cookies.sessionId || req.headers['x-session-id'];
 
     // 1. Get cart
@@ -27,7 +27,7 @@ exports.checkout = async (req, res, next) => {
       if (!product) throw ApiError.badRequest(`Product not found`);
       if (product.stock < item.quantity) throw ApiError.badRequest(`${product.name} is out of stock`);
 
-      const priceKey = currency === 'EGP' ? 'EGP' : 'JOD';
+      const priceKey = 'EGP';
       const price = product.prices?.[priceKey] || product.price;
 
       orderItems.push({
@@ -72,14 +72,15 @@ exports.checkout = async (req, res, next) => {
       contact,
       shippingAddress,
       billingAddress: billingAddress || { sameAsShipping: true },
+      deliverySlot: deliverySlot || null,
       items: orderItems,
       subtotal,
       shippingCost,
       tax,
       discount,
       total,
-      currency,
-      shippingMethod: { name: 'Standard Shipping', cost: shippingCost },
+      currency: 'EGP',
+      shippingMethod: { name: 'Standard Delivery', cost: shippingCost },
       paymentMethod: { type: 'cod', status: 'pending' },
       coupon: couponData,
       status: 'confirmed',

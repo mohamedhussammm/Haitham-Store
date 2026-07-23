@@ -34,8 +34,8 @@ const cartSchema = new mongoose.Schema({
   },
   currency: {
     type: String,
-    enum: ['EGP', 'JOD'],
-    default: 'JOD',
+    enum: ['EGP'],
+    default: 'EGP',
   },
   expiresAt: {
     type: Date,

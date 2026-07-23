@@ -1,0 +1,125 @@
+.carouselSection {
+  padding: var(--space-3xl) 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: var(--space-xl);
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: 40px;
+  font-weight: 700;
+  color: var(--fs-green-900);
+  margin-top: 4px;
+  letter-spacing: 0.5px;
+}
+
+.subtitle {
+  font-size: 15px;
+  color: var(--color-text-muted);
+  margin-top: 4px;
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.controlBtn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1.5px solid var(--fs-green-200);
+  background: white;
+  color: var(--fs-green-800);
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+}
+
+.controlBtn:hover {
+  background: var(--fs-green-800);
+  color: white;
+  border-color: var(--fs-green-800);
+  transform: scale(1.08);
+  box-shadow: var(--shadow-green);
+}
+
+.slideCounter {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  min-width: 44px;
+  text-align: center;
+}
+
+/* Track & Window */
+.carouselWindow {
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  padding: 8px 4px 16px;
+}
+
+.carouselTrack {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 20px;
+  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: transform;
+}
+
+.carouselItem {
+  transition: transform 0.3s ease;
+}
+
+/* Dots */
+.dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: var(--space-xl);
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: none;
+  background: var(--fs-gray-300);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dotActive {
+  background: var(--fs-green-700);
+  width: 28px;
+  border-radius: var(--radius-full);
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .controls {
+    align-self: flex-end;
+  }
+  .title {
+    font-size: 28px;
+  }
+}

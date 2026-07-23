@@ -1,175 +1,562 @@
+/* ══════════════════════════════════════════
+   Fit Station — Home Page Styles
+   ══════════════════════════════════════════ */
+
+/* ── HERO ───────────────────────────────── */
 .hero {
   position: relative;
-  min-height: 85vh;
-  display: flex;
+  background: var(--fs-green-800);
+  min-height: 88vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   align-items: center;
-  justify-content: center;
-  background: url('https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=1920&h=1080&fit=crop') center/cover no-repeat;
-  color: white;
-  text-align: center;
+  overflow: hidden;
+  padding: 0 var(--container-padding);
+  gap: var(--space-2xl);
+  max-width: 100%;
 }
 
-.heroOverlay {
+.heroBg {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(26,26,26,0.6) 0%, rgba(26,26,26,0.3) 100%);
+  background:
+    radial-gradient(ellipse at 70% 50%, rgba(111, 190, 68, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse at 10% 90%, rgba(27, 67, 50, 0.8) 0%, transparent 50%);
+  pointer-events: none;
 }
 
 .heroContent {
   position: relative;
   z-index: 1;
-  max-width: 600px;
-  padding: var(--space-xl);
+  max-width: 580px;
+  margin: 0 auto;
+  padding: var(--space-4xl) 0 var(--space-4xl) max(var(--container-padding), calc((100vw - var(--container-max)) / 2));
 }
 
 .heroTitle {
   font-family: var(--font-heading);
-  font-size: 64px;
-  font-weight: 400;
-  line-height: 1.1;
-  margin-bottom: var(--space-lg);
-  letter-spacing: -1px;
-}
-
-.heroSubtitle {
-  font-size: 16px;
-  font-weight: 300;
-  margin-bottom: var(--space-xl);
-  opacity: 0.9;
-  line-height: 1.6;
-}
-
-/* Trust */
-.trust {
-  padding: var(--space-2xl) 0;
-  background: var(--color-bg-secondary);
-  text-align: center;
-}
-
-.trustLabel {
-  font-size: 10px;
-  letter-spacing: 3px;
+  font-size: clamp(52px, 7vw, 96px);
+  font-weight: 700;
+  line-height: 1.0;
+  color: var(--fs-white);
   text-transform: uppercase;
-  color: var(--color-text-muted);
-  margin-bottom: var(--space-md);
+  letter-spacing: 0.02em;
+  margin: 16px 0;
 }
 
-.trustLogos {
+.heroAccent {
+  color: var(--fs-green-400);
+  display: block;
+}
+
+.heroSub {
+  font-size: 16px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: var(--space-xl);
+}
+
+.heroCta {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: var(--space-lg);
+  gap: var(--space-md);
   flex-wrap: wrap;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--color-text-muted);
+  margin-bottom: var(--space-2xl);
 }
 
-/* Product Grid */
-.productGrid {
+.heroStats {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xl);
+  padding-top: var(--space-xl);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.heroStat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.heroStat strong {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--fs-green-400);
+}
+.heroStat span {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.55);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.heroStatDivider {
+  width: 1px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* ── Hero Image Panel ── */
+.heroImage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  padding: var(--space-3xl) var(--container-padding) var(--space-3xl) 0;
+}
+
+.heroImageCard {
+  position: relative;
+  width: min(460px, 100%);
+  aspect-ratio: 1;
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.5);
+  border: 2px solid rgba(111, 190, 68, 0.3);
+}
+
+.heroImageCard img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.heroMacroFloat {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  gap: 8px;
+  animation: fadeIn 1s ease 0.5s both;
+}
+
+/* ── TRUST BAR ──────────────────────────── */
+.trust {
+  background: var(--fs-green-50);
+  border-top: 2px solid var(--fs-green-200);
+  border-bottom: 2px solid var(--fs-green-200);
+  padding: 20px 0;
+}
+
+.trustGrid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xl);
+  flex-wrap: wrap;
+}
+
+.trustPill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--fs-green-800);
+  padding: 8px 16px;
+  background: var(--fs-white);
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--fs-green-200);
+  white-space: nowrap;
+  transition: all var(--transition-fast);
+}
+.trustPill:hover {
+  border-color: var(--fs-green-400);
+  box-shadow: 0 2px 8px rgba(45, 106, 79, 0.15);
+  transform: translateY(-1px);
+}
+
+.trustIcon {
+  font-size: 16px;
+}
+
+/* ── MEALS GRID ─────────────────────────── */
+.mealsGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-xl);
+  gap: var(--space-lg);
 }
 
+/* ── Meal Card ── */
+.mealCard {
+  display: flex;
+  flex-direction: column;
+  background: var(--fs-white);
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--color-border);
+  overflow: hidden;
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+}
+.mealCard:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--fs-green-200);
+}
+
+.mealCardImg {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--fs-gray-100);
+}
+.mealCardImg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.mealCard:hover .mealCardImg img { transform: scale(1.06); }
+
+.discountBadge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: var(--color-sale);
+  color: var(--fs-white);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: var(--radius-full);
+  letter-spacing: 0.5px;
+}
+
+.proteinBadge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: var(--fs-black);
+  color: var(--fs-gold);
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 5px 8px;
+  border-radius: var(--radius-xs);
+  letter-spacing: 0.5px;
+}
+
+.mealCardBody {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.mealCardName {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--fs-green-800);
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+
+.mealCardPrice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.price {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--fs-green-700);
+}
+
+.comparePrice {
+  font-size: 13px;
+  color: var(--color-text-light);
+  text-decoration: line-through;
+}
+
+/* ── View All ── */
 .viewAll {
-  text-align: center;
+  display: flex;
+  justify-content: center;
   margin-top: var(--space-2xl);
 }
 
-/* Comparison */
-.comparison {
+/* ── WHY SECTION ────────────────────────── */
+.why {
   padding: var(--space-3xl) 0;
-  background: var(--color-bg-secondary);
+  background: var(--fs-green-900);
+  color: var(--fs-white);
+}
+
+.whyTitle {
+  font-family: var(--font-heading);
+  font-size: 42px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: var(--space-2xl);
+  color: var(--fs-white);
 }
 
 .compTable {
-  max-width: 800px;
-  margin: 0 auto;
   overflow-x: auto;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .compTable table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px;
+  min-width: 500px;
 }
 
-.compTable th, .compTable td {
-  padding: 12px 16px;
+.compTable th,
+.compTable td {
+  padding: 14px 20px;
   text-align: center;
-  border-bottom: 1px solid var(--color-border);
+  font-size: 13px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .compTable th {
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
+  font-family: var(--font-heading);
+  font-size: 14px;
+  font-weight: 700;
   letter-spacing: 1px;
-  padding-bottom: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .compTable td:first-child {
   text-align: left;
   font-weight: 500;
+  color: rgba(255, 255, 255, 0.75);
 }
 
 .highlight {
-  background: rgba(26,26,26,0.05);
-  font-weight: 600;
-  color: var(--color-text);
+  background: rgba(111, 190, 68, 0.12) !important;
+  color: var(--fs-green-400) !important;
 }
 
-/* Newsletter */
-.newsletter {
-  padding: var(--space-4xl) 0;
+.yes   { color: var(--fs-green-400); font-weight: 700; font-size: 16px; }
+.no    { color: rgba(255, 255, 255, 0.3); font-weight: 700; font-size: 16px; }
+.maybe { color: rgba(255, 215, 0, 0.7); font-weight: 600; font-size: 12px; }
+
+/* ── PLANS GRID ─────────────────────────── */
+.planIntro {
   text-align: center;
-  background: linear-gradient(135deg, #E8E4DF 0%, #F0EDE8 100%);
+  color: var(--color-text-muted);
+  margin-top: -32px;
+  margin-bottom: var(--space-2xl);
+  font-size: 15px;
 }
+
+.plansGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+}
+
+.planCard {
+  display: flex;
+  flex-direction: column;
+  background: var(--fs-white);
+  border-radius: var(--radius-xl);
+  border: 2px solid var(--fs-green-200);
+  overflow: hidden;
+  transition: all var(--transition-base);
+  text-decoration: none;
+  color: inherit;
+}
+.planCard:hover {
+  transform: translateY(-6px);
+  border-color: var(--fs-green-400);
+  box-shadow: var(--shadow-green);
+}
+
+.planCardImg {
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  background: var(--fs-green-50);
+}
+.planCardImg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.planCard:hover .planCardImg img { transform: scale(1.05); }
+
+.planCardBody {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.planCardName {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--fs-green-800);
+  margin-bottom: 8px;
+}
+
+.planCardDesc {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  flex: 1;
+  margin-bottom: 16px;
+}
+
+.planCardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+.planPrice {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--fs-green-700);
+}
+
+.planOld {
+  font-size: 13px;
+  color: var(--color-text-light);
+  text-decoration: line-through;
+  margin-left: 6px;
+}
+
+/* ── HOW IT WORKS ───────────────────────── */
+.stepsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2xl);
+}
+
+.step {
+  text-align: center;
+  padding: var(--space-xl);
+  border-radius: var(--radius-xl);
+  border: 1.5px solid var(--color-border);
+  background: var(--fs-white);
+  transition: all var(--transition-base);
+}
+.step:hover {
+  border-color: var(--fs-green-400);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-4px);
+}
+
+.stepNum {
+  font-family: var(--font-heading);
+  font-size: 56px;
+  font-weight: 700;
+  color: var(--fs-green-200);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.stepIcon {
+  font-size: 36px;
+  margin-bottom: 12px;
+}
+
+.stepTitle {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--fs-green-800);
+  margin-bottom: 10px;
+}
+
+.stepDesc {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  line-height: 1.65;
+}
+
+/* ── NEWSLETTER ─────────────────────────── */
+.newsletter {
+  background: var(--fs-black);
+  padding: var(--space-3xl) 0;
+}
+
+.nlInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2xl);
+}
+
+.nlText { flex: 1; }
 
 .nlTitle {
+  font-family: var(--font-heading);
   font-size: 36px;
-  margin-bottom: var(--space-md);
+  font-weight: 700;
+  color: var(--fs-white);
+  margin-bottom: 8px;
 }
 
-.nlDesc {
-  color: var(--color-text-muted);
-  margin-bottom: var(--space-xl);
+.nlSub {
   font-size: 15px;
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .nlForm {
   display: flex;
-  max-width: 400px;
-  margin: 0 auto;
   gap: var(--space-sm);
+  flex: 1;
+  max-width: 460px;
 }
 
 .nlInput {
   flex: 1;
   padding: 14px 18px;
-  border: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
   border-radius: var(--radius-sm);
+  color: var(--fs-white);
   font-size: 14px;
   outline: none;
-  background: white;
+  transition: border-color var(--transition-fast);
 }
+.nlInput::placeholder { color: rgba(255, 255, 255, 0.4); }
+.nlInput:focus { border-color: var(--fs-gold); }
 
-.nlInput:focus {
-  border-color: var(--color-accent);
-}
-
+/* ══ Responsive ══════════════════════════ */
 @media (max-width: 1024px) {
-  .productGrid { grid-template-columns: repeat(3, 1fr); }
+  .mealsGrid  { grid-template-columns: repeat(2, 1fr); }
+  .plansGrid  { grid-template-columns: repeat(2, 1fr); }
+  .stepsGrid  { grid-template-columns: repeat(2, 1fr); }
+  .hero       { min-height: 70vh; }
 }
 
 @media (max-width: 768px) {
-  .heroTitle { font-size: 42px; }
-  .productGrid { grid-template-columns: repeat(2, 1fr); gap: var(--space-md); }
-  .nlForm { flex-direction: column; }
+  .hero       { grid-template-columns: 1fr; min-height: auto; padding-bottom: var(--space-2xl); }
+  .heroImage  { display: none; }
+  .heroContent {
+    padding: var(--space-3xl) var(--container-padding);
+    max-width: 100%;
+  }
+  .heroTitle  { font-size: 52px; }
+  .heroCta    { flex-direction: column; }
+  .heroStats  { flex-wrap: wrap; gap: var(--space-md); }
+  .mealsGrid  { grid-template-columns: repeat(2, 1fr); }
+  .plansGrid  { grid-template-columns: 1fr; }
+  .stepsGrid  { grid-template-columns: 1fr; }
+  .nlInner    { flex-direction: column; }
+  .nlForm     { max-width: 100%; width: 100%; }
+  .trustGrid  { gap: var(--space-sm); }
 }
 
 @media (max-width: 480px) {
-  .hero { min-height: 70vh; }
-  .heroTitle { font-size: 36px; }
+  .mealsGrid  { grid-template-columns: 1fr; }
+  .heroTitle  { font-size: 40px; }
+  .whyTitle   { font-size: 28px; }
+  .nlTitle    { font-size: 26px; }
 }

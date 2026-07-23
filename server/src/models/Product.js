@@ -4,7 +4,7 @@ const slugify = require('slugify');
 const productSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'Product name is required'],
+    required: [true, 'Meal name is required'],
     trim: true,
     maxlength: 200,
   },
@@ -20,9 +20,30 @@ const productSchema = new mongoose.Schema({
   highlights: [{
     type: String,
   }],
-  uses: [{
+  // ── Nutrition Facts ──────────────────────────────────────────
+  nutrition: {
+    calories: { type: Number, min: 0 },
+    protein:  { type: Number, min: 0 },   // grams
+    carbs:    { type: Number, min: 0 },   // grams
+    fat:      { type: Number, min: 0 },   // grams
+    fiber:    { type: Number, min: 0 },   // grams
+    sugar:    { type: Number, min: 0 },   // grams
+  },
+  // ── Dietary & Allergen Info ───────────────────────────────────
+  dietaryTags: [{
     type: String,
+    enum: ['keto', 'vegan', 'vegetarian', 'gluten-free', 'high-protein', 'low-carb', 'halal', 'dairy-free', 'low-fat', 'high-fiber'],
   }],
+  allergens: [{ type: String }],
+  ingredients: [{ type: String }],
+  portionSize: { type: String },          // e.g. "450g", "1 box"
+  // ── Meal Plan / Subscription cadence ─────────────────────────
+  planCadence: {
+    type: String,
+    enum: ['one-off', 'weekly', 'monthly'],
+    default: 'one-off',
+  },
+  // ── Pricing ───────────────────────────────────────────────────
   price: {
     type: Number,
     required: [true, 'Price is required'],
@@ -34,12 +55,10 @@ const productSchema = new mongoose.Schema({
   },
   currency: {
     type: String,
-    enum: ['EGP', 'JOD'],
-    default: 'JOD',
+    enum: ['EGP'],
+    default: 'EGP',
   },
-  // Multi-currency prices
   prices: {
-    JOD: { type: Number },
     EGP: { type: Number },
   },
   discount: {
@@ -48,10 +67,12 @@ const productSchema = new mongoose.Schema({
     min: 0,
     max: 100,
   },
+  // ── Images ────────────────────────────────────────────────────
   images: [{
     url: { type: String, required: true },
     alt: { type: String, default: '' },
   }],
+  // ── Category & Bundles ────────────────────────────────────────
   category: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Category',
@@ -65,6 +86,7 @@ const productSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Product',
   }],
+  // ── Stock & Status ────────────────────────────────────────────
   stock: {
     type: Number,
     required: true,
@@ -96,20 +118,17 @@ productSchema.pre('save', function (next) {
   if (this.isModified('name')) {
     this.slug = slugify(this.name, { lower: true, strict: true });
   }
-  // Sync prices
-  if (this.isModified('price') && !this.prices?.JOD) {
-    this.prices = {
-      JOD: this.price,
-      EGP: Math.round(this.price * 13.5), // approximate conversion
-    };
+  // Sync EGP price
+  if (this.isModified('price') && !this.prices?.EGP) {
+    this.prices = { EGP: this.price };
   }
   next();
 });
 
 // Indexes
-productSchema.index({ slug: 1 });
 productSchema.index({ category: 1, isActive: 1 });
 productSchema.index({ price: 1 });
+productSchema.index({ dietaryTags: 1 });
 productSchema.index({ name: 'text', description: 'text' });
 
 module.exports = mongoose.model('Product', productSchema);

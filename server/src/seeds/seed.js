@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-const User = require('../models/User');
+const User     = require('../models/User');
 const Category = require('../models/Category');
-const Product = require('../models/Product');
-const Coupon = require('../models/Coupon');
-const Expense = require('../models/Expense');
+const Product  = require('../models/Product');
+const Coupon   = require('../models/Coupon');
+const Expense  = require('../models/Expense');
 
 const connectDB = require('../config/db');
 
@@ -22,313 +22,431 @@ const seedData = async () => {
     ]);
 
     // ========================
-    // 1. Create Admin User
+    // 1. Admin & Test Users
     // ========================
-    console.log('👤 Creating admin user...');
+    console.log('👤 Creating users...');
     const admin = await User.create({
-      firstName: 'Haitham',
-      lastName: 'Admin',
-      email: 'admin@haithamstore.com',
-      password: 'admin123',
-      role: 'admin',
-      phone: '+962791234567',
+      firstName: 'Fit Station',
+      lastName:  'Admin',
+      email:     'admin@fitstation.com',
+      password:  'admin123',
+      role:      'admin',
+      phone:     '01113395716',
     });
 
-    // Create test user
     await User.create({
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'john@test.com',
-      password: 'user123',
-      role: 'user',
-      phone: '+962791111111',
+      firstName: 'Ahmed',
+      lastName:  'Hassan',
+      email:     'ahmed@test.com',
+      password:  'user123',
+      role:      'user',
+      phone:     '01000000000',
     });
 
     // ========================
-    // 2. Create Categories
+    // 2. Food Categories
     // ========================
     console.log('📁 Creating categories...');
     const categories = await Category.create([
-      { name: 'Face Towels', description: 'Premium disposable face towels for daily skincare' },
-      { name: 'Body Towels', description: 'Soft and absorbent body towels' },
-      { name: 'Bundles', description: 'Value bundles and combo packs' },
-      { name: 'Travel', description: 'Travel-sized products for on the go' },
-      { name: 'Accessories', description: 'Skincare accessories and tools' },
+      { name: 'Protein Meals',      description: 'High-protein meal boxes with rice & vegetables — fuel your goals' },
+      { name: 'Salads',             description: 'Fresh daily salads — clean, light, and packed with nutrients' },
+      { name: 'Meal Plans',         description: 'Weekly & monthly subscription meal plans — customized for your diet' },
+      { name: 'Snacks',             description: 'Healthy snacks and light bites to keep you on track' },
+      { name: 'Juices & Smoothies', description: 'Cold-pressed juices and protein smoothies — fresh every day' },
     ]);
 
-    const [faceTowels, bodyTowels, bundles, travel, accessories] = categories;
+    const [proteinMeals, salads, mealPlans, snacks, juices] = categories;
 
     // ========================
-    // 3. Create Products
+    // 3. Meals (from brand assets)
     // ========================
-    console.log('📦 Creating products...');
-    const products = await Product.create([
+    console.log('🥗 Creating meals...');
+
+    // Realistic food images from Unsplash — meal prep container style
+    const meals = await Product.create([
+      // ── PROTEIN MEALS ────────────────────────────────────────────────
       {
-        name: 'Face Towel',
-        description: '50 single-use, large, biodegradable face towels. Made from plant-based materials, our face towels are clean, soft, and absorbent — perfect for daily skincare routines.',
-        highlights: [
-          '50 single-use large towels for daily skincare',
-          'Clean and completely bacteria-free experience',
-          'Soft making them gentle on your skin\'s barrier',
-          'Absorbent and durable for multipurpose use',
-          'Plant-Based made from biodegradable materials',
-        ],
-        uses: [
-          'Face drying: enjoy a clean and safe face-drying experience after every wash',
-          'Makeup removing: add micellar water for effortless daily makeup removal',
-          'Mask removing: wet the towel to gently cleanse mask residue away',
-        ],
-        price: 10,
+        name:        'Chicken Sweet and Sour',
+        description: 'Tender chicken pieces tossed in a tangy sweet and sour sauce, served with steamed white rice and a side of sautéed vegetables. Clean fuel with bold flavor — every bite is calorie-smart.',
+        highlights:  ['High Protein', 'Calorie Counted', 'Fresh Ingredients', 'Cooked to Perfection'],
+        nutrition:   { calories: 460, protein: 39, carbs: 52, fat: 9, fiber: 4, sugar: 8 },
+        dietaryTags: ['high-protein', 'halal', 'low-fat'],
+        allergens:   ['soy'],
+        ingredients: ['Chicken breast', 'White rice', 'Bell peppers', 'Pineapple chunks', 'Sweet and sour sauce', 'Peas', 'Carrots', 'Spring onion'],
+        portionSize: '450g',
+        planCadence: 'one-off',
+        price:       129,
         compareAtPrice: null,
-        discount: 0,
-        prices: { JOD: 10, EGP: 135 },
+        discount:    0,
+        currency:    'EGP',
+        prices:      { EGP: 129 },
         images: [
-          { url: 'https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?w=600&h=600&fit=crop', alt: 'Face Towel Box' },
-          { url: 'https://images.unsplash.com/photo-1616627547584-bf28cee262db?w=600&h=600&fit=crop', alt: 'Face Towel Close Up' },
-          { url: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=600&h=600&fit=crop', alt: 'Face Towel in Use' },
+          { url: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=600&h=600&fit=crop', alt: 'Chicken Sweet and Sour meal box' },
+          { url: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=600&h=600&fit=crop', alt: 'Chicken Sweet and Sour close up' },
         ],
-        category: faceTowels._id,
-        stock: 200,
-        rating: 4.9,
-        numReviews: 147,
+        category:    proteinMeals._id,
+        stock:       50,
+        rating:      4.9,
+        numReviews:  124,
+        seo: {
+          metaTitle:       'Chicken Sweet and Sour | Fit Station Kitchen',
+          metaDescription: '39g protein, 460 kcal. Tender chicken in tangy sweet and sour sauce with rice & veggies.',
+        },
       },
       {
-        name: 'Golden Towel',
-        description: 'Premium bamboo-infused golden face towels. Super soft, absorbent, and biodegradable. Our golden towels are the luxurious upgrade for your skincare routine.',
-        highlights: [
-          '50 single-use large towels for daily skincare',
-          'Bamboo-infused for extra softness',
-          'Super absorbent and biodegradable',
-          'Hypoallergenic and dermatologist tested',
-          'Premium gold packaging',
-        ],
-        uses: [
-          'Face drying: the softest face-drying experience',
-          'Makeup removing: effortless makeup removal with micellar water',
-          'Sensitive skin: perfect for sensitive and acne-prone skin',
-        ],
-        price: 13,
+        name:        'Chicken Barbecue',
+        description: 'Smoky grilled chicken barbecue with a perfectly balanced BBQ glaze, served on a bed of fluffy white rice with sautéed seasonal vegetables. Healthy never tasted this good.',
+        highlights:  ['High Protein', 'Fresh Ingredients', 'Grilled to Perfection', 'Calorie Counted'],
+        nutrition:   { calories: 480, protein: 40, carbs: 55, fat: 12, fiber: 3, sugar: 10 },
+        dietaryTags: ['high-protein', 'halal'],
+        allergens:   [],
+        ingredients: ['Chicken breast', 'White rice', 'BBQ sauce', 'Bell peppers', 'Peas', 'Corn', 'Garlic', 'Olive oil'],
+        portionSize: '470g',
+        planCadence: 'one-off',
+        price:       129,
         compareAtPrice: null,
-        discount: 0,
-        prices: { JOD: 13, EGP: 175 },
+        discount:    0,
+        currency:    'EGP',
+        prices:      { EGP: 129 },
         images: [
-          { url: 'https://images.unsplash.com/photo-1631729371254-42c2892f0e6e?w=600&h=600&fit=crop', alt: 'Golden Towel Box' },
-          { url: 'https://images.unsplash.com/photo-1596755389378-c31d21fd1273?w=600&h=600&fit=crop', alt: 'Golden Towel Texture' },
-          { url: 'https://images.unsplash.com/photo-1585232004423-244e0e6904e3?w=600&h=600&fit=crop', alt: 'Golden Towel Pack' },
+          { url: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&h=600&fit=crop', alt: 'Chicken Barbecue meal box' },
+          { url: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&h=600&fit=crop', alt: 'Grilled Chicken BBQ' },
         ],
-        category: faceTowels._id,
-        stock: 150,
-        rating: 4.8,
-        numReviews: 93,
+        category:    proteinMeals._id,
+        stock:       50,
+        rating:      4.9,
+        numReviews:  98,
+        seo: {
+          metaTitle:       'Chicken Barbecue | Fit Station Kitchen',
+          metaDescription: '40g protein, 480 kcal. Smoky grilled BBQ chicken with rice & vegetables.',
+        },
       },
       {
-        name: 'Face Bundle',
-        description: '3x Face Towel boxes at a discounted bundle price. Stock up and save on your daily skincare essentials.',
-        price: 30,
-        compareAtPrice: 40,
-        discount: 25,
-        prices: { JOD: 30, EGP: 405 },
-        images: [
-          { url: 'https://images.unsplash.com/photo-1583947215259-38e31be8751f?w=600&h=600&fit=crop', alt: 'Face Bundle' },
-          { url: 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=600&h=600&fit=crop', alt: 'Face Bundle Pack' },
-        ],
-        category: bundles._id,
-        isBundle: true,
-        stock: 80,
-        rating: 4.9,
-        numReviews: 62,
-        highlights: ['3x Face Towel boxes (150 towels total)', 'Save 25% vs buying individually', 'Free shipping included'],
-        uses: ['Perfect for stocking up', 'Great as a gift set', 'Ideal for family use'],
-      },
-      {
-        name: 'Golden Bundle',
-        description: '3x Golden Towel boxes at a special bundle price. The ultimate luxury skincare towel experience.',
-        price: 39,
-        compareAtPrice: 52,
-        discount: 25,
-        prices: { JOD: 39, EGP: 527 },
-        images: [
-          { url: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=600&h=600&fit=crop', alt: 'Golden Bundle' },
-          { url: 'https://images.unsplash.com/photo-1540555700478-4be289fbec6d?w=600&h=600&fit=crop', alt: 'Golden Bundle Pack' },
-        ],
-        category: bundles._id,
-        isBundle: true,
-        stock: 60,
-        rating: 4.8,
-        numReviews: 41,
-        highlights: ['3x Golden Towel boxes (150 towels total)', 'Save 25% vs buying individually', 'Premium bamboo quality'],
-        uses: ['Luxury skincare routine', 'Gift-worthy presentation', 'Sensitive skin care'],
-      },
-      {
-        name: 'Travel Face Towel',
-        description: 'Compact travel-sized face towels. Perfect for your bag, gym, or travel. 20 towels per pack.',
-        price: 5,
+        name:        'Chicken Sweet Corn',
+        description: 'Creamy chicken with sweet corn and mixed vegetables in a rich, light sauce — served with a fresh cucumber and mixed vegetable side. Customize it to fit your diet plan.',
+        highlights:  ['Extra Protein', 'Fresh Ingredients', 'Customize Your Meal', 'Real Food, Real Results'],
+        nutrition:   { calories: 450, protein: 38, carbs: 48, fat: 10, fiber: 5, sugar: 6 },
+        dietaryTags: ['high-protein', 'halal', 'gluten-free'],
+        allergens:   ['dairy'],
+        ingredients: ['Chicken breast', 'Sweet corn', 'Cucumber', 'Bell peppers', 'Peas', 'Light cream sauce', 'Fresh herbs'],
+        portionSize: '430g',
+        planCadence: 'one-off',
+        price:       129,
         compareAtPrice: null,
-        discount: 0,
-        prices: { JOD: 5, EGP: 68 },
+        discount:    0,
+        currency:    'EGP',
+        prices:      { EGP: 129 },
         images: [
-          { url: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=600&h=600&fit=crop', alt: 'Travel Face Towel' },
-          { url: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=600&h=600&fit=crop', alt: 'Travel Pack' },
+          { url: 'https://images.unsplash.com/photo-1547592180-85f173990554?w=600&h=600&fit=crop', alt: 'Chicken Sweet Corn meal box' },
+          { url: 'https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=600&h=600&fit=crop', alt: 'Chicken Sweet Corn top view' },
         ],
-        category: travel._id,
-        stock: 300,
-        rating: 4.7,
-        numReviews: 88,
-        highlights: ['20 compact towels per pack', 'Fits in your bag or purse', 'TSA-friendly packaging'],
-        uses: ['Travel and flights', 'Gym sessions', 'Office touch-ups'],
+        category:    proteinMeals._id,
+        stock:       45,
+        rating:      4.8,
+        numReviews:  77,
+        seo: {
+          metaTitle:       'Chicken Sweet Corn | Fit Station Kitchen',
+          metaDescription: '38g protein, 450 kcal. Creamy chicken sweet corn with fresh veggie side.',
+        },
       },
       {
-        name: 'Golden Travel Bundle',
-        description: 'Travel-sized golden towels bundle. 3 packs of 20 towels each, perfect for on-the-go luxury.',
-        price: 15,
-        compareAtPrice: 20,
-        discount: 25,
-        prices: { JOD: 15, EGP: 203 },
-        images: [
-          { url: 'https://images.unsplash.com/photo-1556228841-a3c527ebefe5?w=600&h=600&fit=crop', alt: 'Golden Travel Bundle' },
-          { url: 'https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=600&h=600&fit=crop', alt: 'Travel Golden Pack' },
-        ],
-        category: bundles._id,
-        isBundle: true,
-        stock: 100,
-        rating: 4.6,
-        numReviews: 34,
-        highlights: ['3x Travel Golden packs (60 towels)', 'Compact and portable', 'Save 25%'],
-        uses: ['Frequent travelers', 'Gym goers', 'Weekend getaways'],
-      },
-      {
-        name: 'Travel Bundle',
-        description: 'Travel-sized face towels bundle. 3 packs, the perfect companion for your adventures.',
-        price: 9,
-        compareAtPrice: 12,
-        discount: 25,
-        prices: { JOD: 9, EGP: 122 },
-        images: [
-          { url: 'https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?w=600&h=600&fit=crop', alt: 'Travel Bundle' },
-          { url: 'https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=600&h=600&fit=crop', alt: 'Travel Bundle Pack' },
-        ],
-        category: bundles._id,
-        isBundle: true,
-        stock: 120,
-        rating: 4.7,
-        numReviews: 55,
-        highlights: ['3x Travel packs (60 towels)', 'Best value for travelers', 'Save 25%'],
-        uses: ['Travel essentials', 'On-the-go skincare', 'Gift sets'],
-      },
-      {
-        name: 'Body Towel XL',
-        description: 'Extra-large disposable body towels. Thick, absorbent, and perfect for post-shower or gym.',
-        price: 18,
+        name:        'Meatballs with Red Sauce',
+        description: 'Hearty beef and herb meatballs slow-cooked in a rich tomato red sauce, served with a fresh cucumber and sautéed vegetable side. Extra protein, real results.',
+        highlights:  ['Extra Protein', 'Fresh Ingredients', 'Customize Your Meal', 'Slow Cooked'],
+        nutrition:   { calories: 420, protein: 35, carbs: 30, fat: 14, fiber: 4, sugar: 5 },
+        dietaryTags: ['high-protein', 'halal', 'low-carb'],
+        allergens:   ['gluten'],
+        ingredients: ['Beef mince', 'Tomato sauce', 'Onion', 'Garlic', 'Fresh herbs', 'Cucumber', 'Bell peppers', 'Peas'],
+        portionSize: '440g',
+        planCadence: 'one-off',
+        price:       139,
         compareAtPrice: null,
-        discount: 0,
-        prices: { JOD: 18, EGP: 243 },
+        discount:    0,
+        currency:    'EGP',
+        prices:      { EGP: 139 },
         images: [
-          { url: 'https://images.unsplash.com/photo-1609840114035-3c981b782dfe?w=600&h=600&fit=crop', alt: 'Body Towel XL' },
-          { url: 'https://images.unsplash.com/photo-1563453392212-326f5e854473?w=600&h=600&fit=crop', alt: 'Body Towel XL Open' },
+          { url: 'https://images.unsplash.com/photo-1529042410759-befb1204b468?w=600&h=600&fit=crop', alt: 'Meatballs with Red Sauce meal box' },
+          { url: 'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=600&h=600&fit=crop', alt: 'Meatballs close up' },
         ],
-        category: bodyTowels._id,
-        stock: 90,
-        rating: 4.5,
-        numReviews: 27,
-        highlights: ['Extra-large size for full body', '30 towels per box', 'Ultra-thick and absorbent'],
-        uses: ['Post-shower drying', 'Gym and sports', 'Spa days at home'],
+        category:    proteinMeals._id,
+        stock:       40,
+        rating:      4.8,
+        numReviews:  65,
+        seo: {
+          metaTitle:       'Meatballs with Red Sauce | Fit Station Kitchen',
+          metaDescription: '35g protein, 420 kcal. Hearty meatballs in rich tomato sauce with fresh veggie side.',
+        },
+      },
+
+      // ── SALADS ───────────────────────────────────────────────────────
+      {
+        name:        'Fresh Fit Salad Box',
+        description: 'The best salad in town — mixed greens, ripe tomatoes, crisp cucumber, red onion, fresh lime, and colourful bell peppers. Clean, tasty, and 100% fresh every day. Eat Clean. Feel Unstoppable.',
+        highlights:  ['Fresh Ingredients', 'Tasty & Light', 'Healthy Choice', 'Boosts Your Day'],
+        nutrition:   { calories: 150, protein: 8, carbs: 18, fat: 5, fiber: 6, sugar: 7 },
+        dietaryTags: ['vegan', 'gluten-free', 'low-carb', 'low-fat', 'high-fiber'],
+        allergens:   [],
+        ingredients: ['Mixed greens', 'Cherry tomatoes', 'Cucumber', 'Red onion', 'Fresh lime', 'Yellow bell pepper', 'Red bell pepper', 'Olive oil dressing'],
+        portionSize: '300g',
+        planCadence: 'one-off',
+        price:       89,
+        compareAtPrice: null,
+        discount:    0,
+        currency:    'EGP',
+        prices:      { EGP: 89 },
+        images: [
+          { url: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&h=600&fit=crop', alt: 'Fresh Fit Salad Box' },
+          { url: 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=600&h=600&fit=crop', alt: 'Fresh Salad Close Up' },
+        ],
+        category:    salads._id,
+        stock:       80,
+        rating:      4.9,
+        numReviews:  142,
+        seo: {
+          metaTitle:       'Fresh Fit Salad Box | Fit Station Kitchen',
+          metaDescription: 'Best salad in town! 8g protein, 150 kcal. Fresh greens, tomato, cucumber, lime & peppers.',
+        },
       },
       {
-        name: 'Cleansing Headband',
-        description: 'Soft, adjustable skincare headband to keep hair back during your routine. Spa-quality comfort.',
-        price: 4,
-        compareAtPrice: 6,
-        discount: 33,
-        prices: { JOD: 4, EGP: 54 },
+        name:        'Protein Power Salad',
+        description: 'Grilled chicken strips over a bed of mixed greens, cherry tomatoes, cucumber, and a light lemon-tahini drizzle. The ultimate clean-fuel salad for serious fitness goals.',
+        highlights:  ['High Protein', 'Fresh Daily', 'Clean Fuel', 'Gluten Free'],
+        nutrition:   { calories: 280, protein: 32, carbs: 14, fat: 9, fiber: 5, sugar: 4 },
+        dietaryTags: ['high-protein', 'halal', 'gluten-free', 'low-carb'],
+        allergens:   ['sesame'],
+        ingredients: ['Grilled chicken breast', 'Mixed greens', 'Cherry tomatoes', 'Cucumber', 'Lemon-tahini dressing', 'Sesame seeds'],
+        portionSize: '380g',
+        planCadence: 'one-off',
+        price:       99,
+        compareAtPrice: null,
+        discount:    0,
+        currency:    'EGP',
+        prices:      { EGP: 99 },
         images: [
-          { url: 'https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=600&h=600&fit=crop', alt: 'Cleansing Headband' },
-          { url: 'https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=600&h=600&fit=crop', alt: 'Headband in Use' },
+          { url: 'https://images.unsplash.com/photo-1505253716362-afaea1d3d1af?w=600&h=600&fit=crop', alt: 'Protein Power Salad' },
+          { url: 'https://images.unsplash.com/photo-1607532941433-304659e8198a?w=600&h=600&fit=crop', alt: 'Grilled Chicken Salad' },
         ],
-        category: accessories._id,
-        stock: 200,
-        rating: 4.4,
-        numReviews: 38,
-        highlights: ['Soft microfiber material', 'Adjustable velcro closure', 'Machine washable'],
-        uses: ['Skincare routines', 'Makeup application', 'Face washing'],
+        category:    salads._id,
+        stock:       60,
+        rating:      4.8,
+        numReviews:  58,
+      },
+
+      // ── MEAL PLANS (BUNDLES / SUBSCRIPTIONS) ────────────────────────
+      {
+        name:        '5-Day Lean Plan — Weekly',
+        description: 'Five perfectly calorie-counted meals delivered across the week. Pick your protein, customize your macros, and let us do the meal prep. Real food, real results — The Fit Station Way.',
+        highlights:  ['5 Protein Meals', 'Customized to Your Macros', 'Weekly Delivery', 'Save 15%'],
+        nutrition:   { calories: 460, protein: 39, carbs: 50, fat: 10, fiber: 4, sugar: 7 },
+        dietaryTags: ['high-protein', 'halal'],
+        allergens:   [],
+        ingredients: [],
+        portionSize: '5 meals / week',
+        planCadence: 'weekly',
+        price:       549,
+        compareAtPrice: 645,
+        discount:    15,
+        currency:    'EGP',
+        prices:      { EGP: 549 },
+        images: [
+          { url: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=600&h=600&fit=crop', alt: '5-Day Lean Plan meal prep' },
+          { url: 'https://images.unsplash.com/photo-1511690743698-d9d85f2fbf38?w=600&h=600&fit=crop', alt: 'Weekly meal boxes' },
+        ],
+        category:    mealPlans._id,
+        isBundle:    true,
+        stock:       30,
+        rating:      4.9,
+        numReviews:  47,
+        seo: {
+          metaTitle:       '5-Day Lean Plan | Fit Station Kitchen',
+          metaDescription: 'Weekly subscription — 5 high-protein calorie-counted meals. Customize your macros. Save 15%.',
+        },
       },
       {
-        name: 'Complete Skincare Set',
-        description: 'Everything you need for the perfect skincare routine. Includes Face Towel, Golden Towel, Travel Pack, and Headband.',
-        price: 35,
-        compareAtPrice: 47,
-        discount: 26,
-        prices: { JOD: 35, EGP: 473 },
+        name:        '4-Week Transformation Plan — Monthly',
+        description: '20 calorie-counted, high-protein meals across 4 weeks — fully customized to your diet plan and fitness goals. The most comprehensive meal plan we offer. Eat Fit. Live Strong.',
+        highlights:  ['20 Meals over 4 Weeks', 'Fully Customizable', 'Monthly Delivery', 'Save 20%'],
+        nutrition:   { calories: 460, protein: 39, carbs: 50, fat: 10, fiber: 4, sugar: 7 },
+        dietaryTags: ['high-protein', 'halal'],
+        allergens:   [],
+        ingredients: [],
+        portionSize: '20 meals / month',
+        planCadence: 'monthly',
+        price:       1999,
+        compareAtPrice: 2580,
+        discount:    22,
+        currency:    'EGP',
+        prices:      { EGP: 1999 },
         images: [
-          { url: 'https://images.unsplash.com/photo-1556228578-626e9590b81b?w=600&h=600&fit=crop', alt: 'Complete Set' },
-          { url: 'https://images.unsplash.com/photo-1556229010-aa3f7ff66b24?w=600&h=600&fit=crop', alt: 'Set Contents' },
+          { url: 'https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?w=600&h=600&fit=crop', alt: '4-Week Transformation Plan' },
+          { url: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=600&h=600&fit=crop', alt: 'Monthly meal plan boxes' },
         ],
-        category: bundles._id,
-        isBundle: true,
-        stock: 50,
-        rating: 5.0,
-        numReviews: 19,
-        highlights: ['4 products in 1 set', 'Save 26% vs buying separately', 'Perfect gift option'],
-        uses: ['Complete skincare upgrade', 'Gifting', 'Trying all products'],
+        category:    mealPlans._id,
+        isBundle:    true,
+        stock:       20,
+        rating:      5.0,
+        numReviews:  23,
+        seo: {
+          metaTitle:       '4-Week Transformation Plan | Fit Station Kitchen',
+          metaDescription: 'Monthly subscription — 20 meals fully customized to your diet plan. Save 22%.',
+        },
+      },
+      {
+        name:        '3-Day Trial Pack',
+        description: 'Not sure where to start? Try Fit Station with our 3-day starter pack — 3 handpicked protein meals to taste the quality before committing to a full plan.',
+        highlights:  ['3 Protein Meals', 'Perfect Starter', 'No Commitment', 'Full Macros Info'],
+        nutrition:   { calories: 460, protein: 39, carbs: 50, fat: 10, fiber: 4, sugar: 7 },
+        dietaryTags: ['high-protein', 'halal'],
+        allergens:   [],
+        ingredients: [],
+        portionSize: '3 meals',
+        planCadence: 'one-off',
+        price:       349,
+        compareAtPrice: 387,
+        discount:    10,
+        currency:    'EGP',
+        prices:      { EGP: 349 },
+        images: [
+          { url: 'https://images.unsplash.com/photo-1543339308-43e59d6b73a6?w=600&h=600&fit=crop', alt: '3-Day Trial Pack' },
+        ],
+        category:    mealPlans._id,
+        isBundle:    true,
+        stock:       50,
+        rating:      4.8,
+        numReviews:  31,
+      },
+
+      // ── SNACKS ───────────────────────────────────────────────────────
+      {
+        name:        'Protein Energy Balls',
+        description: 'Handcrafted oat, nut butter, and dark chocolate protein energy balls. A clean, satisfying snack with zero guilt. 6 balls per box.',
+        highlights:  ['Natural Ingredients', 'No Added Sugar', 'High Protein Snack', '6 per box'],
+        nutrition:   { calories: 210, protein: 12, carbs: 22, fat: 8, fiber: 3, sugar: 5 },
+        dietaryTags: ['vegetarian', 'high-protein', 'high-fiber'],
+        allergens:   ['nuts', 'gluten'],
+        ingredients: ['Oats', 'Peanut butter', 'Dark chocolate chips', 'Honey', 'Vanilla extract', 'Chia seeds'],
+        portionSize: '6 balls / 120g',
+        planCadence: 'one-off',
+        price:       59,
+        compareAtPrice: null,
+        discount:    0,
+        currency:    'EGP',
+        prices:      { EGP: 59 },
+        images: [
+          { url: 'https://images.unsplash.com/photo-1534080564583-6be75777b70a?w=600&h=600&fit=crop', alt: 'Protein Energy Balls' },
+        ],
+        category:    snacks._id,
+        stock:       100,
+        rating:      4.7,
+        numReviews:  39,
+      },
+
+      // ── JUICES & SMOOTHIES ──────────────────────────────────────────
+      {
+        name:        'Green Power Juice',
+        description: 'Cold-pressed spinach, cucumber, green apple, ginger, and lemon. Packed with micronutrients to boost your energy and kickstart your day the clean way.',
+        highlights:  ['Cold Pressed', 'No Added Sugar', 'Vitamin Rich', '100% Natural'],
+        nutrition:   { calories: 95, protein: 3, carbs: 22, fat: 0, fiber: 3, sugar: 14 },
+        dietaryTags: ['vegan', 'gluten-free', 'low-fat', 'low-carb'],
+        allergens:   [],
+        ingredients: ['Spinach', 'Cucumber', 'Green apple', 'Ginger', 'Lemon', 'Cold water'],
+        portionSize: '350ml',
+        planCadence: 'one-off',
+        price:       49,
+        compareAtPrice: null,
+        discount:    0,
+        currency:    'EGP',
+        prices:      { EGP: 49 },
+        images: [
+          { url: 'https://images.unsplash.com/photo-1610970881699-44a5587cabec?w=600&h=600&fit=crop', alt: 'Green Power Juice' },
+        ],
+        category:    juices._id,
+        stock:       80,
+        rating:      4.8,
+        numReviews:  52,
+      },
+      {
+        name:        'Protein Mango Smoothie',
+        description: 'Thick and creamy mango smoothie with whey protein, banana, and low-fat milk. The perfect post-workout recovery drink — sweet, satisfying, and macro-friendly.',
+        highlights:  ['Post-Workout', 'High Protein', 'Natural Mango', 'No Artificial Flavours'],
+        nutrition:   { calories: 280, protein: 25, carbs: 38, fat: 4, fiber: 2, sugar: 28 },
+        dietaryTags: ['high-protein', 'halal', 'vegetarian'],
+        allergens:   ['dairy'],
+        ingredients: ['Mango', 'Banana', 'Whey protein', 'Low-fat milk', 'Honey'],
+        portionSize: '400ml',
+        planCadence: 'one-off',
+        price:       59,
+        compareAtPrice: null,
+        discount:    0,
+        currency:    'EGP',
+        prices:      { EGP: 59 },
+        images: [
+          { url: 'https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=600&h=600&fit=crop', alt: 'Protein Mango Smoothie' },
+        ],
+        category:    juices._id,
+        stock:       70,
+        rating:      4.9,
+        numReviews:  44,
       },
     ]);
 
     // ========================
-    // 4. Create Coupons
+    // 4. Coupons
     // ========================
     console.log('🎟️  Creating coupons...');
     await Coupon.create([
       {
-        code: 'WELCOME10',
-        type: 'percentage',
-        value: 10,
-        minPurchase: 15,
-        maxDiscount: 10,
-        usageLimit: 100,
-        expiresAt: new Date('2027-12-31'),
+        code:        'FITSTART10',
+        type:        'percentage',
+        value:       10,
+        minPurchase: 100,
+        maxDiscount: 50,
+        usageLimit:  200,
+        expiresAt:   new Date('2027-12-31'),
       },
       {
-        code: 'SAVE5',
-        type: 'fixed',
-        value: 5,
-        minPurchase: 25,
-        usageLimit: 50,
-        expiresAt: new Date('2027-06-30'),
+        code:        'EATFIT',
+        type:        'fixed',
+        value:       30,
+        minPurchase: 200,
+        usageLimit:  100,
+        expiresAt:   new Date('2027-06-30'),
       },
       {
-        code: 'BUNDLE20',
-        type: 'percentage',
-        value: 20,
-        minPurchase: 30,
-        maxDiscount: 15,
-        usageLimit: 30,
-        expiresAt: new Date('2027-03-31'),
+        code:        'MEALPLAN20',
+        type:        'percentage',
+        value:       20,
+        minPurchase: 500,
+        maxDiscount: 200,
+        usageLimit:  50,
+        expiresAt:   new Date('2027-03-31'),
       },
     ]);
 
     // ========================
-    // 5. Create Sample Expenses
+    // 5. Expenses
     // ========================
     console.log('💰 Creating expenses...');
     await Expense.create([
-      { title: 'Towel Inventory Restock', amount: 2500, currency: 'JOD', category: 'inventory', description: 'Monthly towel inventory purchase', date: new Date('2026-04-01'), createdBy: admin._id },
-      { title: 'Facebook Ads - April', amount: 800, currency: 'JOD', category: 'marketing', description: 'Facebook & Instagram ad campaigns', date: new Date('2026-04-05'), createdBy: admin._id },
-      { title: 'Shipping Costs - March', amount: 350, currency: 'JOD', category: 'shipping', description: 'Courier service monthly invoice', date: new Date('2026-03-28'), createdBy: admin._id },
-      { title: 'Warehouse Rent', amount: 600, currency: 'JOD', category: 'operations', description: 'Monthly warehouse rent', date: new Date('2026-04-01'), createdBy: admin._id },
-      { title: 'Staff Salaries - April', amount: 3000, currency: 'JOD', category: 'salaries', description: 'Monthly payroll', date: new Date('2026-04-01'), createdBy: admin._id },
-      { title: 'Electricity Bill', amount: 120, currency: 'JOD', category: 'utilities', description: 'Warehouse electricity', date: new Date('2026-04-10'), createdBy: admin._id },
-      { title: 'Packaging Materials', amount: 450, currency: 'JOD', category: 'inventory', description: 'Boxes, wrapping, and labels', date: new Date('2026-04-08'), createdBy: admin._id },
-      { title: 'Google Ads - April', amount: 500, currency: 'JOD', category: 'marketing', description: 'Google search and shopping ads', date: new Date('2026-04-07'), createdBy: admin._id },
-      { title: 'Domain & Hosting', amount: 25, currency: 'JOD', category: 'operations', description: 'Annual domain and hosting renewal', date: new Date('2026-03-15'), createdBy: admin._id },
-      { title: 'Product Photography', amount: 200, currency: 'JOD', category: 'marketing', description: 'Professional product shoots', date: new Date('2026-03-20'), createdBy: admin._id },
+      { title: 'Ingredient Procurement — July', amount: 18500, currency: 'EGP', category: 'inventory',   description: 'Monthly fresh ingredient purchase (chicken, vegetables, rice)', date: new Date('2026-07-01'), createdBy: admin._id },
+      { title: 'Facebook & Instagram Ads',       amount: 6000,  currency: 'EGP', category: 'marketing',  description: 'Social media ad campaigns for July', date: new Date('2026-07-05'), createdBy: admin._id },
+      { title: 'Delivery Courier Service',       amount: 3200,  currency: 'EGP', category: 'shipping',   description: 'Monthly delivery partner invoice', date: new Date('2026-06-28'), createdBy: admin._id },
+      { title: 'Kitchen Rent — July',            amount: 8000,  currency: 'EGP', category: 'operations', description: 'Monthly commercial kitchen rental', date: new Date('2026-07-01'), createdBy: admin._id },
+      { title: 'Staff Salaries — July',          amount: 22000, currency: 'EGP', category: 'salaries',   description: 'Kitchen and delivery staff payroll', date: new Date('2026-07-01'), createdBy: admin._id },
+      { title: 'Gas & Electricity',              amount: 950,   currency: 'EGP', category: 'utilities',  description: 'Kitchen utilities bill', date: new Date('2026-07-10'), createdBy: admin._id },
+      { title: 'Meal Containers & Packaging',    amount: 3500,  currency: 'EGP', category: 'inventory',  description: 'Black 2-compartment meal prep containers, labels, and bags', date: new Date('2026-07-08'), createdBy: admin._id },
+      { title: 'Content Creation & Photography', amount: 2000,  currency: 'EGP', category: 'marketing',  description: 'Meal photography and social media content', date: new Date('2026-06-20'), createdBy: admin._id },
+      { title: 'Website & Hosting',              amount: 300,   currency: 'EGP', category: 'operations', description: 'Monthly hosting and domain', date: new Date('2026-07-15'), createdBy: admin._id },
+      { title: 'TikTok Ads — June',             amount: 4500,  currency: 'EGP', category: 'marketing',  description: 'TikTok performance ad campaign', date: new Date('2026-06-07'), createdBy: admin._id },
     ]);
 
-    console.log('\n✅ Seed completed successfully!');
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    console.log('📧 Admin: admin@haithamstore.com / admin123');
-    console.log('📧 User:  john@test.com / user123');
-    console.log(`📦 Products: ${products.length}`);
-    console.log('🎟️  Coupons: WELCOME10, SAVE5, BUNDLE20');
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+    console.log('\n✅ Fit Station seed completed!');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('📧 Admin:  admin@fitstation.com / admin123');
+    console.log('📧 User:   ahmed@test.com / user123');
+    console.log(`🥗 Meals:  ${meals.length}`);
+    console.log('🎟️  Coupons: FITSTART10, EATFIT, MEALPLAN20');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
     process.exit(0);
   } catch (error) {

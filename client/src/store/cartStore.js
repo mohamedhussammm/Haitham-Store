@@ -1,45 +1,37 @@
 'use client';
 import { create } from 'zustand';
 import api from '@/lib/api';
+import { FREE_DELIVERY_THRESHOLD, DELIVERY_FEE } from '@/lib/constants';
 
 const useCartStore = create((set, get) => ({
   items: [],
   coupon: null,
   isOpen: false,
   isLoading: false,
-  currency: 'JOD',
+  currency: 'EGP',
 
-  // Actions
-  openCart: () => set({ isOpen: true }),
-  closeCart: () => set({ isOpen: false }),
+  // UI Actions
+  openCart:   () => set({ isOpen: true }),
+  closeCart:  () => set({ isOpen: false }),
   toggleCart: () => set((s) => ({ isOpen: !s.isOpen })),
-  setCurrency: (currency) => set({ currency }),
 
   // Fetch cart from server
   fetchCart: async () => {
     try {
       const res = await api.get('/cart');
       const cart = res.data;
-      set({
-        items: cart.items || [],
-        coupon: cart.coupon || null,
-      });
+      set({ items: cart.items || [], coupon: cart.coupon || null });
     } catch (e) {
       console.error('Failed to fetch cart:', e);
     }
   },
 
-  // Add item to cart
+  // Add item
   addItem: async (productId, quantity = 1) => {
     try {
       set({ isLoading: true });
       const res = await api.post('/cart/add', { productId, quantity });
-      set({
-        items: res.data.items || [],
-        coupon: res.data.coupon || null,
-        isOpen: true,
-        isLoading: false,
-      });
+      set({ items: res.data.items || [], coupon: res.data.coupon || null, isOpen: true, isLoading: false });
       return true;
     } catch (e) {
       set({ isLoading: false });
@@ -48,7 +40,7 @@ const useCartStore = create((set, get) => ({
     }
   },
 
-  // Update item quantity
+  // Update quantity
   updateQuantity: async (itemId, quantity) => {
     try {
       const res = await api.put(`/cart/update/${itemId}`, { quantity });
@@ -99,36 +91,33 @@ const useCartStore = create((set, get) => ({
     }
   },
 
-  // Computed values
+  // Computed values (EGP only)
   getSubtotal: () => {
-    const { items, currency } = get();
+    const { items } = get();
     return items.reduce((sum, item) => {
       const product = item.product;
-      const price = product?.prices?.[currency] || product?.price || item.price;
+      const price = product?.prices?.EGP || product?.price || item.price;
       return sum + price * item.quantity;
     }, 0);
   },
 
-  getItemCount: () => {
-    return get().items.reduce((sum, item) => sum + item.quantity, 0);
-  },
+  getItemCount: () => get().items.reduce((sum, item) => sum + item.quantity, 0),
 
-  getShippingCost: () => {
+  getDeliveryFee: () => {
     const subtotal = get().getSubtotal();
-    return subtotal >= 30 ? 0 : 2;
+    return subtotal >= FREE_DELIVERY_THRESHOLD ? 0 : DELIVERY_FEE;
   },
 
   getDiscount: () => {
     const { coupon } = get();
-    if (!coupon) return 0;
-    return coupon.discount || 0;
+    return coupon?.discount || 0;
   },
 
   getTotal: () => {
     const subtotal = get().getSubtotal();
-    const shipping = get().getShippingCost();
+    const delivery = get().getDeliveryFee();
     const discount = get().getDiscount();
-    return subtotal + shipping - discount;
+    return subtotal + delivery - discount;
   },
 }));
 

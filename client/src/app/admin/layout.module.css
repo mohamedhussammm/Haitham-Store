@@ -1,13 +1,13 @@
 .layout {
   display: flex;
   min-height: 100vh;
-  background: #F4F6F9;
+  background: var(--fs-gray-50);
 }
 
 /* Sidebar */
 .sidebar {
   width: 250px;
-  background: #1A1A1A;
+  background: var(--fs-green-900);
   color: white;
   display: flex;
   flex-direction: column;
@@ -17,6 +17,7 @@
   height: 100vh;
   z-index: 50;
   overflow: hidden;
+  border-right: 1px solid rgba(111, 190, 68, 0.15);
 }
 
 .sidebarHeader {
@@ -40,7 +41,7 @@
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
-  background: #3b82f6;
+  background: var(--fs-green-700);
   color: white;
   padding: 2px 8px;
   border-radius: 20px;
@@ -71,8 +72,9 @@
 }
 
 .navItemActive {
-  background: rgba(255,255,255,0.12);
-  color: white;
+  background: rgba(111, 190, 68, 0.18);
+  color: var(--fs-green-400);
+  border-left: 3px solid var(--fs-green-400);
 }
 
 .navIcon { font-size: 16px; width: 20px; text-align: center; }
@@ -93,7 +95,7 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: #3b82f6;
+  background: var(--fs-green-700);
   display: flex;
   align-items: center;
   justify-content: center;

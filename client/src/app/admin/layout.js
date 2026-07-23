@@ -6,12 +6,12 @@ import useAuthStore from '@/store/authStore';
 import styles from './layout.module.css';
 
 const navItems = [
-  { href: '/admin', label: 'Dashboard', icon: '📊' },
-  { href: '/admin/products', label: 'Products', icon: '📦' },
-  { href: '/admin/orders', label: 'Orders', icon: '🛒' },
-  { href: '/admin/expenses', label: 'Expenses', icon: '💰' },
-  { href: '/admin/coupons', label: 'Coupons', icon: '🎟️' },
-  { href: '/admin/users', label: 'Users', icon: '👥' },
+  { href: '/admin',          label: 'Dashboard',   icon: '📊' },
+  { href: '/admin/products', label: 'Meals',        icon: '🥗' },
+  { href: '/admin/orders',   label: 'Orders',       icon: '📦' },
+  { href: '/admin/expenses', label: 'Expenses',     icon: '💰' },
+  { href: '/admin/coupons',  label: 'Coupons',      icon: '🎟️' },
+  { href: '/admin/users',    label: 'Customers',    icon: '👥' },
 ];
 
 export default function AdminLayout({ children }) {
@@ -38,7 +38,10 @@ export default function AdminLayout({ children }) {
       {/* Sidebar */}
       <aside className={styles.sidebar}>
         <div className={styles.sidebarHeader}>
-          <Link href="/" className={styles.sidebarLogo}>/Haitham.Store/</Link>
+          <Link href="/" className={styles.sidebarLogo}>
+            <span style={{ fontFamily: 'var(--font-heading)', fontSize: '16px', fontWeight: 700, letterSpacing: '2px', color: 'white' }}>FIT STATION</span>
+            <span style={{ fontSize: '9px', color: 'var(--fs-green-400)', letterSpacing: '3px', display: 'block', marginTop: '1px' }}>KITCHEN</span>
+          </Link>
           <span className={styles.adminBadge}>Admin</span>
         </div>
 
@@ -71,7 +74,7 @@ export default function AdminLayout({ children }) {
       {/* Main Content */}
       <main className={styles.main}>
         <header className={styles.topBar}>
-          <div className={styles.breadcrumb}>Admin / {pathname.split('/').pop() || 'Dashboard'}</div>
+          <div className={styles.breadcrumb}>🥗 Fit Station Admin / {pathname.split('/').pop() || 'Dashboard'}</div>
           <button className={styles.topLogoutBtn} onClick={async () => { await logout(); router.push('/'); }}>
             Logout
           </button>

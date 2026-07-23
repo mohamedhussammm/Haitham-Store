@@ -1,7 +1,7 @@
 {
-  "name": "bamteek-server",
+  "name": "fitstation-server",
   "version": "1.0.0",
-  "description": "Bamteek ecommerce backend - Express.js MVC",
+  "description": "Fit Station healthy food ordering backend - Express.js MVC",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

@@ -1,23 +1,22 @@
 'use client';
 import Link from 'next/link';
 import useCartStore from '@/store/cartStore';
-import { formatPrice } from '@/lib/constants';
+import { formatPrice, DIETARY_TAGS } from '@/lib/constants';
 import styles from './ProductCard.module.css';
 
 export default function ProductCard({ product }) {
   const addItem = useCartStore((s) => s.addItem);
-  const currency = useCartStore((s) => s.currency);
 
-  const price = product.prices?.[currency] || product.price;
-  const comparePrice = product.compareAtPrice
-    ? (currency === 'EGP' ? product.compareAtPrice * 13.5 : product.compareAtPrice)
-    : null;
+  const price = product.price;
+  const comparePrice = product.compareAtPrice;
+  const nutrition = product.nutrition || {};
+  const dietaryTags = product.dietaryTags || [];
 
   return (
     <div className={styles.card}>
       <Link href={`/products/${product.slug}`} className={styles.imageWrap}>
         <img
-          src={product.images?.[0]?.url || 'https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?w=400&h=400&fit=crop'}
+          src={product.images?.[0]?.url || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=400&fit=crop'}
           alt={product.name}
           className={styles.image}
           loading="lazy"
@@ -33,25 +32,59 @@ export default function ProductCard({ product }) {
         {product.discount > 0 && (
           <span className={styles.badge}>-{product.discount}%</span>
         )}
+        {product.planCadence && product.planCadence !== 'one-off' && (
+          <span className={styles.cadenceBadge}>
+            {product.planCadence.toUpperCase()} PLAN
+          </span>
+        )}
       </Link>
+
       <div className={styles.info}>
+        {/* Dietary Tag Badges */}
+        {dietaryTags.length > 0 && (
+          <div className={styles.tagStrip}>
+            {dietaryTags.slice(0, 2).map((tag) => {
+              const config = DIETARY_TAGS[tag];
+              return config ? (
+                <span key={tag} className={config.class} style={{ fontSize: '10px', padding: '2px 6px' }}>
+                  {config.icon} {config.label}
+                </span>
+              ) : null;
+            })}
+          </div>
+        )}
+
         <Link href={`/products/${product.slug}`}>
           <h3 className={styles.name}>{product.name}</h3>
         </Link>
-        {product.rating > 0 && (
-          <div className={styles.rating}>
-            <span className={styles.stars}>{'★'.repeat(Math.round(product.rating))}{'☆'.repeat(5 - Math.round(product.rating))}</span>
-            <span className={styles.ratingNum}>{product.rating}</span>
+
+        {/* Nutrition Macro Strip */}
+        {(nutrition.protein != null || nutrition.calories != null) && (
+          <div className="macro-strip" style={{ margin: '6px 0 10px 0' }}>
+            {nutrition.protein != null && (
+              <span className="macro-chip macro-chip-protein">{nutrition.protein}g P</span>
+            )}
+            {nutrition.fat != null && (
+              <span className="macro-chip macro-chip-fat">{nutrition.fat}g F</span>
+            )}
+            {nutrition.carbs != null && (
+              <span className="macro-chip macro-chip-carbs">{nutrition.carbs}g C</span>
+            )}
+            {nutrition.calories != null && (
+              <span className="macro-chip macro-chip-cal">{nutrition.calories} kcal</span>
+            )}
           </div>
         )}
+
         <div className={styles.pricing}>
-          <span className={styles.price}>{formatPrice(price, currency)}</span>
-          {comparePrice && (
-            <span className={styles.comparePrice}>{formatPrice(comparePrice, currency)}</span>
+          <span className={styles.price}>{formatPrice(price)}</span>
+          {comparePrice && comparePrice > price && (
+            <span className={styles.comparePrice}>{formatPrice(comparePrice)}</span>
           )}
         </div>
+
         <button className={styles.addBtn} onClick={() => addItem(product._id)}>
-          ADD TO CART
+          ADD TO MEAL BOX
         </button>
       </div>
     </div>

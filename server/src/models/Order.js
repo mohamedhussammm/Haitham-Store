@@ -15,47 +15,52 @@ const orderSchema = new mongoose.Schema({
   },
   shippingAddress: {
     firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
-    address: { type: String, required: true },
+    lastName:  { type: String, required: true },
+    address:   { type: String, required: true },
     apartment: String,
-    city: { type: String, required: true },
+    city:      { type: String, required: true },
     postalCode: String,
-    country: { type: String, default: 'Jordan' },
-    phone: { type: String, required: true },
+    country:   { type: String, default: 'Egypt' },
+    phone:     { type: String, required: true },
   },
   billingAddress: {
     sameAsShipping: { type: Boolean, default: true },
     firstName: String,
-    lastName: String,
-    address: String,
+    lastName:  String,
+    address:   String,
     apartment: String,
-    city: String,
+    city:      String,
     postalCode: String,
-    country: String,
+    country:   String,
+  },
+  // ── Delivery Time Slot ────────────────────────────────────────
+  deliverySlot: {
+    type: String,
+    // e.g. "10:00 – 12:00", "12:00 – 14:00", "16:00 – 18:00", "18:00 – 20:00"
   },
   items: [{
-    product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
-    name: String,
-    image: String,
-    price: Number,
+    product:  { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
+    name:     String,
+    image:    String,
+    price:    Number,
     quantity: Number,
   }],
-  subtotal: { type: Number, required: true },
+  subtotal:     { type: Number, required: true },
   shippingCost: { type: Number, default: 0 },
-  tax: { type: Number, default: 0 },
-  discount: { type: Number, default: 0 },
-  total: { type: Number, required: true },
+  tax:          { type: Number, default: 0 },
+  discount:     { type: Number, default: 0 },
+  total:        { type: Number, required: true },
   currency: {
     type: String,
-    enum: ['EGP', 'JOD'],
-    default: 'JOD',
+    enum: ['EGP'],
+    default: 'EGP',
   },
   shippingMethod: {
-    name: { type: String, default: 'Standard Shipping' },
+    name: { type: String, default: 'Standard Delivery' },
     cost: Number,
   },
   paymentMethod: {
-    type: { type: String, enum: ['cod'], default: 'cod' },
+    type:   { type: String, enum: ['cod'], default: 'cod' },
     status: {
       type: String,
       enum: ['pending', 'paid', 'failed', 'refunded'],
@@ -63,7 +68,7 @@ const orderSchema = new mongoose.Schema({
     },
   },
   coupon: {
-    code: String,
+    code:     String,
     discount: Number,
   },
   status: {
@@ -71,15 +76,15 @@ const orderSchema = new mongoose.Schema({
     enum: ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'],
     default: 'pending',
   },
-  notes: String,
+  notes:    String,
   saveInfo: { type: Boolean, default: false },
 }, { timestamps: true });
 
-// Auto-generate order number
+// Auto-generate order number with FS- prefix
 orderSchema.pre('save', async function (next) {
   if (!this.orderNumber) {
     const count = await mongoose.model('Order').countDocuments();
-    this.orderNumber = `HS-${String(count + 1001).padStart(6, '0')}`;
+    this.orderNumber = `FS-${String(count + 1001).padStart(6, '0')}`;
   }
   next();
 });

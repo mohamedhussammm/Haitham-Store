@@ -13,8 +13,8 @@
   aspect-ratio: 1;
   overflow: hidden;
   border-radius: var(--radius-md);
-  background: var(--color-bg-secondary);
-  margin-bottom: var(--space-md);
+  background: var(--fs-gray-100);
+  margin-bottom: var(--space-sm);
 }
 
 .image, .imageHover {
@@ -35,57 +35,64 @@
 
 .badge {
   position: absolute;
-  top: 12px;
-  left: 12px;
+  top: 10px;
+  left: 10px;
   background: var(--color-sale);
   color: white;
   font-size: 11px;
   font-weight: 700;
-  padding: 4px 10px;
+  padding: 4px 8px;
   border-radius: var(--radius-full);
+  letter-spacing: 0.5px;
+}
+
+.cadenceBadge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--fs-green-800);
+  color: var(--fs-green-400);
+  font-family: var(--font-heading);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: var(--radius-xs);
   letter-spacing: 0.5px;
 }
 
 .info {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
+}
+
+.tagStrip {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-bottom: 2px;
 }
 
 .name {
-  font-family: var(--font-body);
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--color-text);
-}
-
-.rating {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.stars {
-  color: #fbbf24;
-  font-size: 12px;
-  letter-spacing: 1px;
-}
-
-.ratingNum {
-  font-size: 12px;
-  color: var(--color-text-muted);
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--fs-green-900);
+  letter-spacing: 0.5px;
 }
 
 .pricing {
   display: flex;
   align-items: center;
   gap: 8px;
+  margin-top: 4px;
 }
 
 .price {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--color-text);
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--fs-green-700);
 }
 
 .comparePrice {
@@ -98,17 +105,19 @@
   margin-top: 8px;
   padding: 10px 0;
   width: 100%;
-  background: var(--color-accent);
+  background: var(--fs-green-700);
   color: white;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 2px;
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
   border-radius: var(--radius-sm);
   transition: all var(--transition-base);
 }
 
 .addBtn:hover {
-  background: var(--color-accent-hover);
+  background: var(--fs-green-800);
   transform: translateY(-1px);
+  box-shadow: var(--shadow-green);
 }

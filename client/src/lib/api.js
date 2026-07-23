@@ -3,9 +3,26 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
 class ApiClient {
   constructor() {
     this.baseUrl = API_URL;
+    this.cache = new Map();
+    this.cacheTTL = 60000; // 60s cache for fast page transitions
+  }
+
+  clearCache() {
+    this.cache.clear();
   }
 
   async request(endpoint, options = {}) {
+    const isGet = !options.method || options.method === 'GET';
+    const cacheKey = `${endpoint}_${JSON.stringify(options.headers || {})}`;
+
+    // Return cached response instantly if available and valid
+    if (isGet && this.cache.has(cacheKey)) {
+      const { timestamp, data } = this.cache.get(cacheKey);
+      if (Date.now() - timestamp < this.cacheTTL) {
+        return data;
+      }
+    }
+
     const url = `${this.baseUrl}${endpoint}`;
     const config = {
       headers: {
@@ -42,6 +59,14 @@ class ApiClient {
         throw { status: response.status, message: data.message || 'Something went wrong', errors: data.errors };
       }
 
+      // Cache GET requests
+      if (isGet) {
+        this.cache.set(cacheKey, { timestamp: Date.now(), data });
+      } else {
+        // Invalidate cache on mutations (POST, PUT, DELETE)
+        this.clearCache();
+      }
+
       return data;
     } catch (error) {
       if (error.status) throw error;
@@ -67,6 +92,7 @@ class ApiClient {
 
   // For multipart form data (file uploads)
   async upload(endpoint, formData) {
+    this.clearCache();
     const url = `${this.baseUrl}${endpoint}`;
     const headers = {};
     if (typeof window !== 'undefined') {
@@ -87,6 +113,7 @@ class ApiClient {
   }
 
   async uploadPut(endpoint, formData) {
+    this.clearCache();
     const url = `${this.baseUrl}${endpoint}`;
     const headers = {};
     if (typeof window !== 'undefined') {
