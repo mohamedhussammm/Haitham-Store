@@ -17,23 +17,24 @@ export default function ProductCard({ product }) {
   const carbsVal   = nutrition.carbs ?? 40;
   const calVal     = nutrition.calories ?? 450;
 
+  const imgPrimary = product.images?.[0]?.url || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=400&fit=crop';
+  const imgHover   = product.images?.[1]?.url || product.images?.[0]?.url || 'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=400&h=400&fit=crop';
+
   return (
     <div className={styles.card}>
       <Link href={`/products/${product.slug}`} className={styles.imageWrap}>
         <img
-          src={product.images?.[0]?.url || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=400&fit=crop'}
+          src={imgPrimary}
           alt={product.name}
           className={styles.image}
           loading="lazy"
         />
-        {product.images?.[1] && (
-          <img
-            src={product.images[1].url}
-            alt={product.name}
-            className={styles.imageHover}
-            loading="lazy"
-          />
-        )}
+        <img
+          src={imgHover}
+          alt={product.name}
+          className={styles.imageHover}
+          loading="lazy"
+        />
         {product.discount > 0 && (
           <span className={styles.badge}>-{product.discount}%</span>
         )}

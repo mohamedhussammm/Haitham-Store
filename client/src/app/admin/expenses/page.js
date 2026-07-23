@@ -5,16 +5,16 @@ import { EXPENSE_CATEGORIES, formatPrice } from '@/lib/constants';
 import ConfirmModal from '@/components/common/ConfirmModal';
 import styles from '../admin.module.css';
 
-const emptyForm = { title: '', amount: '', currency: 'JOD', category: 'other', description: '', date: new Date().toISOString().split('T')[0] };
+const emptyForm = { title: '', amount: '', currency: 'EGP', category: 'other', description: '', date: new Date().toISOString().split('T')[0] };
 
 export default function AdminExpensesPage() {
   const [expenses, setExpenses] = useState([]);
-  const [stats, setStats] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [stats, setStats]       = useState(null);
+  const [loading, setLoading]   = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editExpense, setEditExpense] = useState(null);
-  const [form, setForm] = useState(emptyForm);
-  const [saving, setSaving] = useState(false);
+  const [form, setForm]         = useState(emptyForm);
+  const [saving, setSaving]     = useState(false);
   const [catFilter, setCatFilter] = useState('');
   const [deleteId, setDeleteId] = useState(null);
 
@@ -33,7 +33,7 @@ export default function AdminExpensesPage() {
   useEffect(() => { fetchData(); }, [catFilter]);
 
   const openCreate = () => { setEditExpense(null); setForm(emptyForm); setShowModal(true); };
-  const openEdit = (e) => { setEditExpense(e); setForm({ title: e.title, amount: e.amount, currency: e.currency, category: e.category, description: e.description || '', date: e.date?.split('T')[0] || '' }); setShowModal(true); };
+  const openEdit = (e) => { setEditExpense(e); setForm({ title: e.title, amount: e.amount, currency: e.currency || 'EGP', category: e.category, description: e.description || '', date: e.date?.split('T')[0] || '' }); setShowModal(true); };
 
   const handleSave = async () => {
     setSaving(true);
@@ -62,7 +62,7 @@ export default function AdminExpensesPage() {
       <div className={styles.pageHeader}>
         <div>
           <h1 className={styles.pageTitle}>Expenses</h1>
-          <p className={styles.pageSub}>Total: {stats ? formatPrice(stats.totalExpenses, 'JOD') : '—'}</p>
+          <p className={styles.pageSub}>Total: {stats ? formatPrice(stats.totalExpenses, 'EGP') : '—'}</p>
         </div>
         <button className="btn btn-primary" onClick={openCreate}>+ Add Expense</button>
       </div>
@@ -73,7 +73,7 @@ export default function AdminExpensesPage() {
           {stats.byCategory?.map((cat) => (
             <div key={cat._id} style={{ background: 'white', borderRadius: 10, padding: '14px 16px', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', textTransform: 'capitalize' }}>
               <p style={{ fontSize: 12, color: 'var(--color-text-muted)', marginBottom: 4 }}>{cat._id}</p>
-              <p style={{ fontSize: 17, fontWeight: 700 }}>JOD {cat.total.toFixed(0)}</p>
+              <p style={{ fontSize: 17, fontWeight: 700 }}>EGP {cat.total.toFixed(0)}</p>
               <p style={{ fontSize: 11, color: 'var(--color-text-light)' }}>{cat.count} entries</p>
             </div>
           ))}
@@ -98,8 +98,8 @@ export default function AdminExpensesPage() {
                 <tr key={e._id}>
                   <td><strong>{e.title}</strong>{e.description && <div style={{ fontSize: 11, color: 'var(--color-text-muted)' }}>{e.description}</div>}</td>
                   <td><span className="badge badge-neutral" style={{ textTransform: 'capitalize' }}>{e.category}</span></td>
-                  <td><strong>{e.amount.toFixed(3)}</strong></td>
-                  <td>{e.currency}</td>
+                  <td><strong>{formatPrice(e.amount, 'EGP')}</strong></td>
+                  <td>{e.currency || 'EGP'}</td>
                   <td style={{ fontSize: 12 }}>{new Date(e.date).toLocaleDateString()}</td>
                   <td><div className={styles.actions}>
                     <button className={styles.editBtn} onClick={() => openEdit(e)}>Edit</button>
@@ -119,10 +119,10 @@ export default function AdminExpensesPage() {
             <div className={styles.modalBody}>
               <div className="form-group"><label className="form-label">Title *</label><input className="form-input" value={form.title} onChange={(e) => setForm((p) => ({ ...p, title: e.target.value }))} /></div>
               <div className="form-row">
-                <div className="form-group"><label className="form-label">Amount *</label><input className="form-input" type="number" step="0.001" value={form.amount} onChange={(e) => setForm((p) => ({ ...p, amount: e.target.value }))} /></div>
+                <div className="form-group"><label className="form-label">Amount *</label><input className="form-input" type="number" step="1" value={form.amount} onChange={(e) => setForm((p) => ({ ...p, amount: e.target.value }))} /></div>
                 <div className="form-group"><label className="form-label">Currency</label>
                   <select className="form-select" value={form.currency} onChange={(e) => setForm((p) => ({ ...p, currency: e.target.value }))}>
-                    <option value="JOD">JOD</option><option value="EGP">EGP</option>
+                    <option value="EGP">EGP</option>
                   </select>
                 </div>
               </div>

@@ -13,8 +13,8 @@ const expenseSchema = new mongoose.Schema({
   },
   currency: {
     type: String,
-    enum: ['EGP', 'JOD'],
-    default: 'JOD',
+    enum: ['EGP', 'USD', 'JOD'],
+    default: 'EGP',
   },
   category: {
     type: String,

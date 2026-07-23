@@ -308,6 +308,7 @@ const seedData = async () => {
         prices:      { EGP: 349 },
         images: [
           { url: 'https://images.unsplash.com/photo-1543339308-43e59d6b73a6?w=600&h=600&fit=crop', alt: '3-Day Trial Pack' },
+          { url: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&h=600&fit=crop', alt: '3-Day Trial Pack box' },
         ],
         category:    mealPlans._id,
         isBundle:    true,
@@ -334,6 +335,7 @@ const seedData = async () => {
         prices:      { EGP: 59 },
         images: [
           { url: 'https://images.unsplash.com/photo-1534080564583-6be75777b70a?w=600&h=600&fit=crop', alt: 'Protein Energy Balls' },
+          { url: 'https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?w=600&h=600&fit=crop', alt: 'Protein Energy Balls prep' },
         ],
         category:    snacks._id,
         stock:       100,
@@ -359,6 +361,7 @@ const seedData = async () => {
         prices:      { EGP: 49 },
         images: [
           { url: 'https://images.unsplash.com/photo-1610970881699-44a5587cabec?w=600&h=600&fit=crop', alt: 'Green Power Juice' },
+          { url: 'https://images.unsplash.com/photo-1622597467836-f3285f2131b7?w=600&h=600&fit=crop', alt: 'Green Power Juice glass' },
         ],
         category:    juices._id,
         stock:       80,
@@ -382,6 +385,7 @@ const seedData = async () => {
         prices:      { EGP: 59 },
         images: [
           { url: 'https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=600&h=600&fit=crop', alt: 'Protein Mango Smoothie' },
+          { url: 'https://images.unsplash.com/photo-1577805947697-89e18249d767?w=600&h=600&fit=crop', alt: 'Protein Mango Smoothie close up' },
         ],
         category:    juices._id,
         stock:       70,
