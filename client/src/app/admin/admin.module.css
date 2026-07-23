@@ -33,13 +33,16 @@
   border-radius: 12px;
   padding: 0;
   box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-  overflow: hidden;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
 }
 
 .table {
   width: 100%;
   border-collapse: collapse;
   font-size: 13px;
+  min-width: 600px;
 }
 
 .table th {
@@ -219,4 +222,28 @@
   font-size: 13px;
   outline: none;
   background: white;
+}
+
+@media (max-width: 768px) {
+  .pageHeader {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .searchBar .form-input {
+    max-width: 100%;
+  }
+
+  .modal {
+    max-height: 95vh;
+  }
+
+  .modalBody {
+    padding: 16px;
+  }
+
+  .overlay {
+    padding: 10px;
+  }
 }

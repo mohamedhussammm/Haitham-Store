@@ -3,11 +3,15 @@ import { useState, useEffect, useRef } from 'react';
 import ProductCard from '@/components/product/ProductCard';
 import styles from './ProductCarousel.module.css';
 
-export default function ProductCarousel({ products = [], title = 'FEATURED MEALS', subtitle = 'Chef-crafted high-protein meal boxes ready in 3 minutes' }) {
+export default function ProductCarousel({ products = [], title = 'CHEF\'S BESTSELLERS', subtitle = 'Swipe through our macro-balanced hot meals and fresh salads' }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused]         = useState(false);
   const [itemsPerPage, setItemsPerPage] = useState(4);
   const carouselRef                     = useRef(null);
+
+  // Touch Swipe State
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd]     = useState(null);
 
   // Responsive items per page calculation
   useEffect(() => {
@@ -41,6 +45,33 @@ export default function ProductCarousel({ products = [], title = 'FEATURED MEALS
 
   const handleNext = () => {
     setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
+  };
+
+  // Touch Swipe Handlers for Mobile Finger Scrolling
+  const minSwipeDistance = 40;
+
+  const onTouchStart = (e) => {
+    setIsPaused(true);
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    setIsPaused(false);
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe  = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe) {
+      handleNext();
+    } else if (isRightSwipe) {
+      handlePrev();
+    }
   };
 
   if (!products || products.length === 0) return null;
@@ -84,8 +115,14 @@ export default function ProductCarousel({ products = [], title = 'FEATURED MEALS
           </div>
         </div>
 
-        {/* Carousel Window */}
-        <div className={styles.carouselWindow} ref={carouselRef}>
+        {/* Carousel Window with Touch Swipe Events */}
+        <div
+          className={styles.carouselWindow}
+          ref={carouselRef}
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
+        >
           <div
             className={styles.carouselTrack}
             style={{

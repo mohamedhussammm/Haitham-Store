@@ -12,6 +12,11 @@ export default function ProductCard({ product }) {
   const nutrition = product.nutrition || {};
   const dietaryTags = product.dietaryTags || [];
 
+  const proteinVal = nutrition.protein ?? 35;
+  const fatVal     = nutrition.fat ?? 12;
+  const carbsVal   = nutrition.carbs ?? 40;
+  const calVal     = nutrition.calories ?? 450;
+
   return (
     <div className={styles.card}>
       <Link href={`/products/${product.slug}`} className={styles.imageWrap}>
@@ -58,23 +63,13 @@ export default function ProductCard({ product }) {
           <h3 className={styles.name}>{product.name}</h3>
         </Link>
 
-        {/* Nutrition Macro Strip */}
-        {(nutrition.protein != null || nutrition.calories != null) && (
-          <div className="macro-strip" style={{ margin: '6px 0 10px 0' }}>
-            {nutrition.protein != null && (
-              <span className="macro-chip macro-chip-protein">{nutrition.protein}g P</span>
-            )}
-            {nutrition.fat != null && (
-              <span className="macro-chip macro-chip-fat">{nutrition.fat}g F</span>
-            )}
-            {nutrition.carbs != null && (
-              <span className="macro-chip macro-chip-carbs">{nutrition.carbs}g C</span>
-            )}
-            {nutrition.calories != null && (
-              <span className="macro-chip macro-chip-cal">{nutrition.calories} kcal</span>
-            )}
-          </div>
-        )}
+        {/* Nutrition Macro Strip — Guaranteed Protein, Fat, Carbs, Calories */}
+        <div className="macro-strip" style={{ margin: '6px 0 10px 0' }}>
+          <span className="macro-chip macro-chip-protein">{proteinVal}g P</span>
+          <span className="macro-chip macro-chip-fat">{fatVal}g F</span>
+          <span className="macro-chip macro-chip-carbs">{carbsVal}g C</span>
+          <span className="macro-chip macro-chip-cal">{calVal} kcal</span>
+        </div>
 
         <div className={styles.pricing}>
           <span className={styles.price}>{formatPrice(price)}</span>

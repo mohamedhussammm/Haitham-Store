@@ -35,7 +35,7 @@ export default function AdminLayout({ children }) {
 
   return (
     <div className={styles.layout}>
-      {/* Sidebar */}
+      {/* Desktop Sidebar */}
       <aside className={styles.sidebar}>
         <div className={styles.sidebarHeader}>
           <Link href="/" className={styles.sidebarLogo}>
@@ -71,15 +71,32 @@ export default function AdminLayout({ children }) {
         </div>
       </aside>
 
-      {/* Main Content */}
+      {/* Main Content Area */}
       <main className={styles.main}>
+        {/* Top Breadcrumb & Mobile Navigation Header */}
         <header className={styles.topBar}>
           <div className={styles.breadcrumb}>🥗 Fit Station Admin / {pathname.split('/').pop() || 'Dashboard'}</div>
           <button className={styles.topLogoutBtn} onClick={async () => { await logout(); router.push('/'); }}>
             Logout
           </button>
         </header>
-        {children}
+
+        {/* Mobile Horizontal Navigation Pills Bar */}
+        <nav className={styles.mobileNavPills}>
+          {navItems.map((item) => {
+            const isActive = pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href));
+            return (
+              <Link key={item.href} href={item.href} className={`${styles.mobilePill} ${isActive ? styles.mobilePillActive : ''}`}>
+                <span>{item.icon}</span>
+                <span>{item.label}</span>
+              </Link>
+            );
+          })}
+        </nav>
+
+        <div className={styles.contentWrapper}>
+          {children}
+        </div>
       </main>
     </div>
   );
