@@ -28,8 +28,8 @@ const seedData = async () => {
     const admin = await User.create({
       firstName: 'Haitham',
       lastName: 'Admin',
-      email: 'admin@haithamstore.com',
-      password: 'admin123',
+      email: 'admin@haitham.com',
+      password: 'Haitham123',
       role: 'admin',
       phone: '+962791234567',
     });
@@ -324,7 +324,7 @@ const seedData = async () => {
 
     console.log('\n✅ Seed completed successfully!');
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    console.log('📧 Admin: admin@haithamstore.com / admin123');
+    console.log('📧 Admin: admin@haitham.com / Haitham123');
     console.log('📧 User:  john@test.com / user123');
     console.log(`📦 Products: ${products.length}`);
     console.log('🎟️  Coupons: WELCOME10, SAVE5, BUNDLE20');
