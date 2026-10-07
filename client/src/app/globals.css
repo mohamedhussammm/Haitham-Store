@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap');
-
 :root {
   --color-bg: #FFFFFF;
   --color-bg-secondary: #F7F5F2;
@@ -19,20 +17,21 @@
   --color-warning: #ED6C02;
   --color-info: #0288D1;
 
-  --font-heading: 'Cormorant Garamond', Georgia, serif;
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  /* Fonts are injected by next/font in layout.js (--font-inter / --font-cormorant) */
+  --font-heading: var(--font-cormorant), 'Cormorant Garamond', Georgia, serif;
+  --font-body: var(--font-inter), 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
   --space-xs: 4px;
   --space-sm: 8px;
   --space-md: 16px;
   --space-lg: 24px;
-  --space-xl: 32px;
-  --space-2xl: 48px;
-  --space-3xl: 64px;
-  --space-4xl: 96px;
+  --space-xl: clamp(20px, 3vw, 32px);
+  --space-2xl: clamp(28px, 5vw, 48px);
+  --space-3xl: clamp(40px, 7vw, 64px);
+  --space-4xl: clamp(56px, 10vw, 96px);
 
   --container-max: 1200px;
-  --container-padding: 20px;
+  --container-padding: clamp(16px, 4vw, 24px);
   --header-height: 60px;
   --announcement-height: 40px;
   --drawer-width: 460px;
@@ -65,9 +64,18 @@
 }
 
 html {
-  scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  /* Prevent any element from making the page wider than the screen */
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
 }
 
 body {
@@ -76,17 +84,32 @@ body {
   line-height: 1.6;
   color: var(--color-text);
   background: var(--color-bg);
-  overflow-x: hidden;
+  min-height: 100vh;
+  min-height: 100dvh;
+  /* `clip` (not `hidden`) so <body> never becomes a nested scroll container,
+     which would break the sticky header and make scrolling janky on iOS */
+  overflow-x: clip;
 }
 
-body.no-scroll {
+/* Applied to <html> while the cart drawer / mobile menu / lightbox is open */
+html.scroll-locked {
   overflow: hidden;
+}
+
+.site-main {
+  min-height: calc(100vh - 200px);
+  min-height: calc(100dvh - 200px);
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
   font-weight: 500;
   line-height: 1.2;
+  overflow-wrap: break-word;
+}
+
+p, li, span, a, td, th {
+  overflow-wrap: break-word;
 }
 
 a {
@@ -94,10 +117,13 @@ a {
   text-decoration: none;
 }
 
-img {
+img, svg, video {
   max-width: 100%;
-  height: auto;
   display: block;
+}
+
+img {
+  height: auto;
 }
 
 button {
@@ -106,24 +132,36 @@ button {
   background: none;
   font-family: inherit;
   font-size: inherit;
+  color: inherit;
+}
+
+a, button, input, select, textarea, label {
+  touch-action: manipulation;
 }
 
 input, select, textarea {
   font-family: inherit;
   font-size: inherit;
+  max-width: 100%;
 }
 
 ul, ol {
   list-style: none;
 }
 
+table {
+  max-width: 100%;
+}
+
 /* ======================== */
 /*  Utility Classes          */
 /* ======================== */
 .container {
+  width: 100%;
   max-width: var(--container-max);
   margin: 0 auto;
-  padding: 0 var(--container-padding);
+  padding-left: max(var(--container-padding), env(safe-area-inset-left));
+  padding-right: max(var(--container-padding), env(safe-area-inset-right));
 }
 
 .sr-only {
@@ -145,25 +183,23 @@ ul, ol {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-height: 44px;
   padding: 12px 28px;
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 1.5px;
   text-transform: uppercase;
   border-radius: var(--radius-sm);
-  transition: all var(--transition-base);
+  transition: background-color var(--transition-base), color var(--transition-base),
+    transform var(--transition-base), box-shadow var(--transition-base);
   gap: 8px;
   white-space: nowrap;
+  text-align: center;
 }
 
 .btn-primary {
   background: var(--color-accent);
   color: var(--color-white);
-}
-.btn-primary:hover {
-  background: var(--color-accent-hover);
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
 }
 
 .btn-outline {
@@ -171,9 +207,22 @@ ul, ol {
   color: var(--color-text);
   border: 1.5px solid var(--color-text);
 }
-.btn-outline:hover {
-  background: var(--color-text);
-  color: var(--color-white);
+
+.btn-primary:active,
+.btn-outline:active {
+  transform: scale(0.98);
+}
+
+@media (hover: hover) {
+  .btn-primary:hover {
+    background: var(--color-accent-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+  .btn-outline:hover {
+    background: var(--color-text);
+    color: var(--color-white);
+  }
 }
 
 .btn-full {
@@ -186,6 +235,7 @@ ul, ol {
 }
 
 .btn-sm {
+  min-height: 36px;
   padding: 8px 16px;
   font-size: 12px;
   letter-spacing: 1px;
@@ -224,6 +274,8 @@ ul, ol {
   background: var(--color-white);
   transition: border-color var(--transition-fast);
   outline: none;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .form-input:focus {
@@ -253,12 +305,13 @@ ul, ol {
 
 .form-select {
   width: 100%;
-  padding: 12px 14px;
+  padding: 12px 36px 12px 14px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   font-size: 14px;
   color: var(--color-text);
   background: var(--color-white);
+  -webkit-appearance: none;
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B6B6B' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
@@ -280,8 +333,9 @@ ul, ol {
 }
 
 .form-checkbox input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
   accent-color: var(--color-accent);
 }
 
@@ -315,11 +369,13 @@ ul, ol {
 .radio-option input[type="radio"] {
   width: 18px;
   height: 18px;
+  flex-shrink: 0;
   accent-color: var(--color-accent);
 }
 
 .radio-option-content {
   flex: 1;
+  min-width: 0;
 }
 
 .radio-option-label {
@@ -336,6 +392,7 @@ ul, ol {
 .radio-option-price {
   font-weight: 600;
   font-size: 14px;
+  flex-shrink: 0;
 }
 
 /* ======================== */
@@ -390,7 +447,7 @@ ul, ol {
 
 .section-title {
   font-family: var(--font-heading);
-  font-size: 36px;
+  font-size: clamp(26px, 4.5vw, 36px);
   font-weight: 500;
   text-align: center;
   margin-bottom: var(--space-2xl);
@@ -399,13 +456,20 @@ ul, ol {
 /* ======================== */
 /*  Page Transitions         */
 /* ======================== */
+/* Ends on `transform: none` so it never creates a containing block
+   (a lingering transform breaks position: fixed overlays inside pages). */
 .page-enter {
-  animation: fadeIn var(--transition-slow) forwards;
+  animation: pageEnter 400ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes pageEnter {
+  from { opacity: 0; transform: translate3d(0, 8px, 0); }
+  to { opacity: 1; transform: none; }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translate3d(0, 10px, 0); }
+  to { opacity: 1; transform: none; }
 }
 
 @keyframes slideInRight {
@@ -463,6 +527,7 @@ ul, ol {
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
+  pointer-events: none;
 }
 
 .toast {
@@ -474,7 +539,8 @@ ul, ol {
   font-weight: 500;
   box-shadow: var(--shadow-lg);
   animation: slideInToast 0.3s ease-out;
-  max-width: 380px;
+  max-width: min(380px, calc(100vw - 32px));
+  pointer-events: auto;
 }
 
 .toast-success { border-left: 4px solid var(--color-success); }
@@ -482,8 +548,8 @@ ul, ol {
 .toast-warning { border-left: 4px solid var(--color-warning); }
 
 @keyframes slideInToast {
-  from { transform: translateX(100%); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
+  from { transform: translate3d(0, -12px, 0); opacity: 0; }
+  to { transform: none; opacity: 1; }
 }
 
 /* ======================== */
@@ -491,26 +557,60 @@ ul, ol {
 /* ======================== */
 @media (max-width: 768px) {
   :root {
-    --container-padding: 16px;
     --drawer-width: 100%;
+    --header-height: 56px;
+  }
+
+  /* iOS Safari zooms the page when focusing inputs smaller than 16px */
+  input, select, textarea,
+  .form-input, .form-select {
+    font-size: 16px !important;
   }
 
   .form-row {
     grid-template-columns: 1fr;
-  }
-
-  .section-title {
-    font-size: 28px;
+    gap: 0;
   }
 
   .hide-mobile {
     display: none !important;
   }
+
+  .toast-container {
+    left: 16px;
+    right: 16px;
+    top: 16px;
+    align-items: stretch;
+  }
+
+  .toast {
+    max-width: none;
+  }
+
+  .loading-center {
+    min-height: 260px;
+  }
 }
 
 @media (max-width: 480px) {
   .btn {
-    padding: 10px 20px;
+    padding: 12px 20px;
     font-size: 12px;
+    letter-spacing: 1px;
+  }
+
+  .btn-lg {
+    padding: 14px 28px;
+    font-size: 13px;
+  }
+}
+
+/* Respect users who prefer less motion (also makes low-end phones smoother) */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

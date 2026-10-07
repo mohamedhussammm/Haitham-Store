@@ -5,6 +5,7 @@
   border-bottom: 1px solid var(--color-border);
   z-index: var(--z-header);
   transition: box-shadow var(--transition-base);
+  width: 100%;
 }
 
 .inner {
@@ -19,14 +20,17 @@
 
 .logo {
   font-family: var(--font-heading);
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 600;
   letter-spacing: 2px;
   color: var(--color-text);
   transition: opacity var(--transition-fast);
+  white-space: nowrap;
 }
 
-.logo:hover { opacity: 0.7; }
+@media (hover: hover) {
+  .logo:hover { opacity: 0.7; }
+}
 
 .nav {
   display: flex;
@@ -55,27 +59,37 @@
   transition: width var(--transition-base);
 }
 
-.navLink:hover::after { width: 100%; }
-.navLink:hover { opacity: 0.8; }
+@media (hover: hover) {
+  .navLink:hover::after { width: 100%; }
+  .navLink:hover { opacity: 0.8; }
+}
 
 .utils {
   display: flex;
   align-items: center;
-  gap: var(--space-md);
+  gap: var(--space-sm);
 }
 
 .utilBtn, .cartBtn {
   color: var(--color-text);
-  padding: 4px;
-  transition: opacity var(--transition-fast);
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
+  transition: opacity var(--transition-fast);
+  border-radius: var(--radius-sm);
 }
-.utilBtn:hover, .cartBtn:hover { opacity: 0.6; }
+
+@media (hover: hover) {
+  .utilBtn:hover, .cartBtn:hover { opacity: 0.6; }
+}
 
 .cartBadge {
   position: absolute;
-  top: -4px;
-  right: -6px;
+  top: 4px;
+  right: 4px;
   background: var(--color-sale);
   color: white;
   font-size: 10px;
@@ -86,11 +100,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  pointer-events: none;
 }
 
 .menuBtn {
   display: none;
-  padding: 8px;
+  min-width: 44px;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
 }
 
 .hamburger {
@@ -99,7 +118,7 @@
   height: 2px;
   background: var(--color-text);
   position: relative;
-  transition: var(--transition-fast);
+  transition: background var(--transition-fast);
 }
 
 .hamburger::before, .hamburger::after {
@@ -109,7 +128,7 @@
   height: 2px;
   background: var(--color-text);
   left: 0;
-  transition: var(--transition-fast);
+  transition: transform var(--transition-fast), top var(--transition-fast), bottom var(--transition-fast);
 }
 
 .hamburger::before { top: -6px; }
@@ -119,41 +138,85 @@
 .hamburger.open::before { transform: rotate(45deg); top: 0; }
 .hamburger.open::after { transform: rotate(-45deg); bottom: 0; }
 
+.backdrop {
+  display: none;
+}
+
 .mobileMenu {
   display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background: var(--color-white);
-  border-bottom: 1px solid var(--color-border);
-  padding: var(--space-lg) var(--container-padding);
-  box-shadow: var(--shadow-lg);
-  animation: fadeIn 0.2s ease;
+}
+
+@media (max-width: 768px) {
+  .nav { display: none; }
+  .menuBtn { display: flex; }
+  
+  .backdrop {
+    display: block;
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(2px);
+    z-index: calc(var(--z-header) - 1);
+  }
+
+  .mobileMenu {
+    display: block;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--color-white);
+    border-bottom: 1px solid var(--color-border);
+    padding: var(--space-md) var(--container-padding) var(--space-xl);
+    box-shadow: var(--shadow-lg);
+    max-height: calc(100dvh - var(--header-height));
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    transform: translateY(-8px);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform var(--transition-base), opacity var(--transition-base);
+  }
+
+  .mobileMenuOpen {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .logo {
+    font-size: 19px;
+    letter-spacing: 1px;
+  }
 }
 
 .mobileNav {
   display: flex;
   flex-direction: column;
-  gap: var(--space-md);
 }
 
 .mobileNav a {
   font-size: 16px;
-  padding: 8px 0;
+  font-weight: 500;
+  padding: 14px 4px;
   border-bottom: 1px solid var(--color-border);
+  color: var(--color-text);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-@media (max-width: 768px) {
-  .nav { display: none; }
-  .menuBtn { display: block; }
-  .mobileMenu { display: block; }
+.mobileNav a:active {
+  background: var(--color-bg-secondary);
 }
 
 .mobileLogout {
   width: 100%;
   text-align: left;
-  padding: 12px 0;
+  padding: 14px 4px;
   font-size: 16px;
   font-weight: 500;
   color: #ef4444;
@@ -162,6 +225,6 @@
   background: none;
   border-left: none;
   border-right: none;
+  border-bottom: none;
   cursor: pointer;
 }
-

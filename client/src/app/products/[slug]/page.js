@@ -28,11 +28,26 @@ export default function ProductPage() {
 
         const relRes = await api.get(`/products/related/${slug}`);
         setRelated(relRes.data || []);
-      } catch (e) { console.error(e); }
-      finally { setLoading(false); }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
     };
     if (slug) fetchProduct();
   }, [slug]);
+
+  // Lock scroll when lightbox is opened
+  useEffect(() => {
+    if (lightboxOpen) {
+      document.documentElement.classList.add('scroll-locked');
+    } else {
+      document.documentElement.classList.remove('scroll-locked');
+    }
+    return () => {
+      document.documentElement.classList.remove('scroll-locked');
+    };
+  }, [lightboxOpen]);
 
   if (loading) return <div className="loading-center"><div className="spinner spinner-lg" /></div>;
   if (!product) return <div className="loading-center"><p>Product not found</p></div>;
@@ -54,7 +69,13 @@ export default function ProductPage() {
         <div className={styles.layout}>
           {/* Image Gallery */}
           <div className={styles.gallery}>
-            <div className={styles.mainImage} onClick={() => setLightboxOpen(true)}>
+            <div
+              className={styles.mainImage}
+              onClick={() => setLightboxOpen(true)}
+              role="button"
+              tabIndex={0}
+              aria-label="Enlarge image"
+            >
               <img
                 src={product.images?.[selectedImage]?.url || 'https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?w=800'}
                 alt={product.name}
@@ -70,8 +91,9 @@ export default function ProductPage() {
                     key={i}
                     className={`${styles.thumb} ${i === selectedImage ? styles.thumbActive : ''}`}
                     onClick={() => setSelectedImage(i)}
+                    aria-label={`View photo ${i + 1}`}
                   >
-                    <img src={img.url} alt={`${product.name} ${i + 1}`} />
+                    <img src={img.url} alt={`${product.name} thumbnail ${i + 1}`} />
                   </button>
                 ))}
               </div>
@@ -110,9 +132,10 @@ export default function ProductPage() {
                   <button
                     className={styles.accordionHeader}
                     onClick={() => setOpenAccordion(openAccordion === i ? -1 : i)}
+                    aria-expanded={openAccordion === i}
                   >
                     <span>{acc.title}</span>
-                    <span className={styles.accordionIcon}>{openAccordion === i ? '∧' : '∨'}</span>
+                    <span className={styles.accordionIcon}>{openAccordion === i ? '▲' : '▼'}</span>
                   </button>
                   {openAccordion === i && (
                     <div className={styles.accordionBody}>
@@ -142,8 +165,13 @@ export default function ProductPage() {
 
       {/* Lightbox */}
       {lightboxOpen && (
-        <div className={styles.lightbox} onClick={() => setLightboxOpen(false)}>
-          <button className={styles.lightboxClose}>✕</button>
+        <div
+          className={styles.lightbox}
+          onClick={() => setLightboxOpen(false)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <button className={styles.lightboxClose} aria-label="Close image viewer">✕</button>
           <img
             src={product.images?.[selectedImage]?.url}
             alt={product.name}

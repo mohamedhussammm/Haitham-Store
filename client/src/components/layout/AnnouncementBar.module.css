@@ -1,13 +1,17 @@
 .bar {
   background: var(--color-bg-dark);
   color: white;
-  padding: 10px 20px;
+  padding: 8px 36px 8px 16px;
   text-align: center;
-  font-size: 12px;
-  letter-spacing: 1.2px;
+  font-size: 11px;
+  letter-spacing: 1px;
   text-transform: uppercase;
   position: relative;
   z-index: calc(var(--z-header) + 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--announcement-height);
 }
 
 .content {
@@ -15,6 +19,7 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
+  line-height: 1.4;
 }
 
 .content strong {
@@ -23,16 +28,31 @@
 
 .close {
   position: absolute;
-  right: 16px;
+  right: 8px;
   top: 50%;
   transform: translateY(-50%);
   color: white;
-  font-size: 14px;
+  font-size: 16px;
   opacity: 0.7;
   transition: opacity var(--transition-fast);
-  padding: 4px;
+  min-width: 36px;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.close:hover {
-  opacity: 1;
+@media (hover: hover) {
+  .close:hover {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .bar {
+    font-size: 10px;
+    letter-spacing: 0.8px;
+    padding-left: 12px;
+    padding-right: 36px;
+  }
 }

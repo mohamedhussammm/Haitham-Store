@@ -4,28 +4,28 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(4px);
-  z-index: 1000;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(2px);
+  z-index: var(--z-modal);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: 16px;
   animation: fadeIn 0.2s ease-out;
 }
 
 .modal {
   background: white;
   width: 100%;
-  max-width: 450px;
+  max-width: 440px;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-xl);
   overflow: hidden;
-  animation: slideUp 0.3s ease-out;
+  animation: slideUp 0.25s ease-out;
 }
 
 .header {
-  padding: 24px 24px 12px;
+  padding: 20px 20px 10px;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -33,7 +33,7 @@
 
 .header h3 {
   margin: 0;
-  font-size: 20px;
+  font-size: 18px;
 }
 
 .closeBtn {
@@ -42,24 +42,30 @@
   font-size: 18px;
   color: var(--color-text-light);
   cursor: pointer;
+  min-width: 36px;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .body {
-  padding: 0 24px 24px;
+  padding: 0 20px 20px;
 }
 
 .body p {
   margin: 0;
   color: var(--color-text-muted);
-  line-height: 1.6;
+  line-height: 1.5;
+  font-size: 13px;
 }
 
 .footer {
-  padding: 16px 24px;
+  padding: 14px 20px;
   background: var(--color-bg-secondary);
   display: flex;
   justify-content: flex-end;
-  gap: 12px;
+  gap: 10px;
 }
 
 .btnDanger {
@@ -67,8 +73,10 @@
   color: white !important;
 }
 
-.btnDanger:hover {
-  background: #dc2626 !important;
+@media (hover: hover) {
+  .btnDanger:hover {
+    background: #dc2626 !important;
+  }
 }
 
 @keyframes fadeIn {
@@ -77,6 +85,6 @@
 }
 
 @keyframes slideUp {
-  from { transform: translateY(20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from { transform: translate3d(0, 16px, 0); opacity: 0; }
+  to { transform: none; opacity: 1; }
 }

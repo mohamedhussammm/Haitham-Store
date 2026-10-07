@@ -3,7 +3,7 @@ import useCartStore from '@/store/cartStore';
 import styles from './CartDrawer.module.css';
 import { formatPrice, FREE_SHIPPING_THRESHOLD } from '@/lib/constants';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function CartDrawer() {
   const router = useRouter();
@@ -17,6 +17,18 @@ export default function CartDrawer() {
 
   const [couponCode, setCouponCode] = useState('');
   const [couponMsg, setCouponMsg] = useState('');
+
+  // Lock background scroll when drawer is open
+  useEffect(() => {
+    if (isOpen) {
+      document.documentElement.classList.add('scroll-locked');
+    } else {
+      document.documentElement.classList.remove('scroll-locked');
+    }
+    return () => {
+      document.documentElement.classList.remove('scroll-locked');
+    };
+  }, [isOpen]);
 
   const subtotal = getSubtotal();
   const itemCount = getItemCount();
@@ -39,14 +51,21 @@ export default function CartDrawer() {
   return (
     <>
       {/* Overlay */}
-      {isOpen && <div className={styles.overlay} onClick={closeCart} />}
+      {isOpen && <div className={styles.overlay} onClick={closeCart} aria-hidden="true" />}
 
       {/* Drawer */}
-      <div className={`${styles.drawer} ${isOpen ? styles.open : ''}`}>
+      <div
+        className={`${styles.drawer} ${isOpen ? styles.open : ''}`}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Shopping Cart"
+      >
         {/* Header */}
         <div className={styles.header}>
-          <h2 className={styles.title}>YOUR CART</h2>
-          <button className={styles.closeBtn} onClick={closeCart}>✕</button>
+          <h2 className={styles.title}>YOUR CART ({itemCount})</h2>
+          <button className={styles.closeBtn} onClick={closeCart} aria-label="Close cart">
+            ✕
+          </button>
         </div>
 
         {/* Shipping Progress */}
@@ -65,7 +84,9 @@ export default function CartDrawer() {
             <div className={styles.progressFill} style={{ width: `${shippingProgress}%` }} />
           </div>
           {amountToFreeShipping > 0 ? (
-            <p className={styles.shippingMsg}>Add <strong>{formatPrice(amountToFreeShipping, currency)}</strong> to get <strong>FREE SHIPPING!</strong></p>
+            <p className={styles.shippingMsg}>
+              Add <strong>{formatPrice(amountToFreeShipping, currency)}</strong> to get <strong>FREE SHIPPING!</strong>
+            </p>
           ) : (
             <p className={styles.shippingMsg}>🎉 You qualify for <strong>FREE SHIPPING!</strong></p>
           )}
@@ -91,16 +112,30 @@ export default function CartDrawer() {
                     <h4 className={styles.itemName}>{product.name || 'Product'}</h4>
                     <div className={styles.itemControls}>
                       <div className={styles.qty}>
-                        <button onClick={() => item.quantity > 1 && updateQuantity(item._id, item.quantity - 1)}>−</button>
+                        <button
+                          onClick={() => item.quantity > 1 && updateQuantity(item._id, item.quantity - 1)}
+                          aria-label="Decrease quantity"
+                        >
+                          −
+                        </button>
                         <span>{item.quantity}</span>
-                        <button onClick={() => updateQuantity(item._id, item.quantity + 1)}>+</button>
+                        <button
+                          onClick={() => updateQuantity(item._id, item.quantity + 1)}
+                          aria-label="Increase quantity"
+                        >
+                          +
+                        </button>
                       </div>
                     </div>
                   </div>
                   <div className={styles.itemRight}>
-                    <button className={styles.removeBtn} onClick={() => removeItem(item._id)}>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                        <path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14"/>
+                    <button
+                      className={styles.removeBtn}
+                      onClick={() => removeItem(item._id)}
+                      aria-label="Remove item"
+                    >
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                        <path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14" />
                       </svg>
                     </button>
                     <span className={styles.itemPrice}>{formatPrice(price * item.quantity, currency)}</span>
@@ -119,7 +154,7 @@ export default function CartDrawer() {
               {coupon ? (
                 <div className={styles.couponApplied}>
                   <span>🎟️ <strong>{coupon.code}</strong> applied (-{formatPrice(coupon.discount, currency)})</span>
-                  <button onClick={removeCoupon} className={styles.couponRemove}>✕</button>
+                  <button onClick={removeCoupon} className={styles.couponRemove} aria-label="Remove coupon">✕</button>
                 </div>
               ) : (
                 <div className={styles.couponForm}>
