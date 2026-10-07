@@ -6,7 +6,10 @@ import styles from './ProductCard.module.css';
 
 export default function ProductCard({ product }) {
   const addItem = useCartStore((s) => s.addItem);
+  const addingProductId = useCartStore((s) => s.addingProductId);
   const currency = useCartStore((s) => s.currency);
+
+  const isAdding = addingProductId === product._id;
 
   const price = product.prices?.[currency] || product.price;
   const comparePrice = product.compareAtPrice
@@ -50,8 +53,19 @@ export default function ProductCard({ product }) {
             <span className={styles.comparePrice}>{formatPrice(comparePrice, currency)}</span>
           )}
         </div>
-        <button className={styles.addBtn} onClick={() => addItem(product._id)}>
-          ADD TO CART
+        <button
+          className={`${styles.addBtn} ${isAdding ? styles.adding : ''}`}
+          onClick={() => addItem(product)}
+          disabled={isAdding}
+        >
+          {isAdding ? (
+            <span className={styles.btnLoading}>
+              <span className={styles.btnSpinner} />
+              Adding...
+            </span>
+          ) : (
+            'ADD TO CART'
+          )}
         </button>
       </div>
     </div>

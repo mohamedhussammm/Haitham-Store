@@ -121,7 +121,7 @@
   letter-spacing: 1.5px;
   text-transform: uppercase;
   border-radius: var(--radius-sm);
-  transition: background-color var(--transition-fast), transform var(--transition-fast);
+  transition: background-color var(--transition-fast), transform var(--transition-fast), opacity var(--transition-fast);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -129,6 +129,31 @@
 
 .addBtn:active {
   transform: scale(0.97);
+}
+
+.adding {
+  opacity: 0.85;
+  cursor: wait;
+}
+
+.btnLoading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btnSpinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 @media (hover: hover) {

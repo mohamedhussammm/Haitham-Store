@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import api from '@/lib/api';
 import useCartStore from '@/store/cartStore';
@@ -16,8 +16,10 @@ export default function ProductPage() {
   const [openAccordion, setOpenAccordion] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
 
+  const galleryRef = useRef(null);
+
   const addItem = useCartStore((s) => s.addItem);
-  const isLoading = useCartStore((s) => s.isLoading);
+  const addingProductId = useCartStore((s) => s.addingProductId);
   const currency = useCartStore((s) => s.currency);
 
   useEffect(() => {
@@ -49,9 +51,32 @@ export default function ProductPage() {
     };
   }, [lightboxOpen]);
 
+  // Sync horizontal swipe scroll on mobile with selectedImage dot
+  const handleGalleryScroll = (e) => {
+    const element = e.target;
+    const scrollPosition = element.scrollLeft;
+    const width = element.offsetWidth;
+    const newIndex = Math.round(scrollPosition / width);
+    if (newIndex !== selectedImage && newIndex >= 0 && newIndex < (product?.images?.length || 1)) {
+      setSelectedImage(newIndex);
+    }
+  };
+
+  const scrollToImage = (index) => {
+    setSelectedImage(index);
+    if (galleryRef.current) {
+      const width = galleryRef.current.offsetWidth;
+      galleryRef.current.scrollTo({
+        left: width * index,
+        behavior: 'smooth',
+      });
+    }
+  };
+
   if (loading) return <div className="loading-center"><div className="spinner spinner-lg" /></div>;
   if (!product) return <div className="loading-center"><p>Product not found</p></div>;
 
+  const isAdding = addingProductId === product._id;
   const price = product.prices?.[currency] || product.price;
   const comparePrice = product.compareAtPrice
     ? (currency === 'EGP' ? product.compareAtPrice * 13.5 : product.compareAtPrice)
@@ -63,34 +88,65 @@ export default function ProductPage() {
     { title: 'PRODUCT DESCRIPTION', content: product.description ? [product.description] : [] },
   ].filter((a) => a.content?.length > 0);
 
+  const images = product.images?.length > 0
+    ? product.images
+    : [{ url: 'https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?w=800' }];
+
   return (
     <div className="page-enter">
       <div className="container">
         <div className={styles.layout}>
           {/* Image Gallery */}
           <div className={styles.gallery}>
+            {/* Desktop & Mobile Carousel with smooth snap scrolling */}
             <div
-              className={styles.mainImage}
-              onClick={() => setLightboxOpen(true)}
-              role="button"
-              tabIndex={0}
-              aria-label="Enlarge image"
+              className={styles.carouselContainer}
+              ref={galleryRef}
+              onScroll={handleGalleryScroll}
             >
-              <img
-                src={product.images?.[selectedImage]?.url || 'https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?w=800'}
-                alt={product.name}
-              />
-              {product.discount > 0 && (
-                <span className={styles.badge}>-{product.discount}%</span>
-              )}
+              {images.map((img, i) => (
+                <div
+                  key={i}
+                  className={styles.carouselSlide}
+                  onClick={() => setLightboxOpen(true)}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Enlarge image ${i + 1}`}
+                >
+                  <img
+                    src={img.url}
+                    alt={`${product.name} - slide ${i + 1}`}
+                    loading={i === 0 ? 'eager' : 'lazy'}
+                  />
+                  {product.discount > 0 && i === 0 && (
+                    <span className={styles.badge}>-{product.discount}%</span>
+                  )}
+                </div>
+              ))}
             </div>
-            {product.images?.length > 1 && (
+
+            {/* Mobile Carousel Pagination Dots */}
+            {images.length > 1 && (
+              <div className={styles.dotsPagination}>
+                {images.map((_, i) => (
+                  <button
+                    key={i}
+                    className={`${styles.dot} ${i === selectedImage ? styles.dotActive : ''}`}
+                    onClick={() => scrollToImage(i)}
+                    aria-label={`Go to slide ${i + 1}`}
+                  />
+                ))}
+              </div>
+            )}
+
+            {/* Thumbnails row */}
+            {images.length > 1 && (
               <div className={styles.thumbnails}>
-                {product.images.map((img, i) => (
+                {images.map((img, i) => (
                   <button
                     key={i}
                     className={`${styles.thumb} ${i === selectedImage ? styles.thumbActive : ''}`}
-                    onClick={() => setSelectedImage(i)}
+                    onClick={() => scrollToImage(i)}
                     aria-label={`View photo ${i + 1}`}
                   >
                     <img src={img.url} alt={`${product.name} thumbnail ${i + 1}`} />
@@ -118,11 +174,18 @@ export default function ProductPage() {
             )}
 
             <button
-              className={styles.addBtn}
-              onClick={() => addItem(product._id)}
-              disabled={isLoading}
+              className={`${styles.addBtn} ${isAdding ? styles.adding : ''}`}
+              onClick={() => addItem(product)}
+              disabled={isAdding}
             >
-              {isLoading ? 'ADDING...' : 'ADD TO CART'}
+              {isAdding ? (
+                <span className={styles.btnLoading}>
+                  <span className={styles.btnSpinner} />
+                  ADDING TO CART...
+                </span>
+              ) : (
+                'ADD TO CART'
+              )}
             </button>
 
             {/* Accordions */}
@@ -173,7 +236,7 @@ export default function ProductPage() {
         >
           <button className={styles.lightboxClose} aria-label="Close image viewer">✕</button>
           <img
-            src={product.images?.[selectedImage]?.url}
+            src={images[selectedImage]?.url}
             alt={product.name}
             onClick={(e) => e.stopPropagation()}
           />
